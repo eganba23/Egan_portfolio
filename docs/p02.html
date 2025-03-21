@@ -9,9 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Benjamin Egan" />
 
+<meta name="date" content="2025-02-06" />
 
-<title>Portfolio 2</title>
+<title>Piece 2</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -290,18 +292,208 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 2</h1>
+<h1 class="title toc-ignore">Piece 2</h1>
+<h4 class="author">Benjamin Egan</h4>
+<h4 class="date">2025-02-06</h4>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<div
+id="tragectories-and-variations-of-family-decision-making-across-countires"
+class="section level2">
+<h2>Tragectories and Variations of Family Decision Making Across
+Countires</h2>
+<p>In this piece, I will further demonstrate my graphing abilities.</p>
+<div id="what-is-family-decision-making" class="section level3">
+<h3>What is Family Decision Making</h3>
+<p>As previously stated, adolescents were presented with a variety o
+topics that families with adolescents often have to make decisions
+about, and chose the answer that best reflected who made most of the
+decisions on each topic. The scale ranged from 1 (My parents decide this
+without discussing it with me) to 5 (I decide this without discussing it
+with my parents), with 3 representing a joint decision (My parents and I
+make the decision together). Adolescents were asked these questions at
+three timepoints, two years and three years after the initial
+observation.</p>
+</div>
+<div id="data-being-used" class="section level3">
+<h3>Data Being Used</h3>
+<p>Several different variables were used for the following analyses.
+Alongside Family Decision Making (FDM), Age (Age), Socio-economic Status
+(SES), Gender (ChGender), and Country of origin (Country) were used to
+help identify potential trends in the data. Below are the countries
+utilized in this dataset.</p>
+<pre class="r"><code>levels(data$Country)</code></pre>
+<pre><code>##  [1] &quot;USA-Hispanic&quot;          &quot;China-Jinan&quot;           &quot;China-Shanghai&quot;       
+##  [4] &quot;Italy-Naples&quot;          &quot;Italy-Rome&quot;            &quot;Kenya&quot;                
+##  [7] &quot;Philippines&quot;           &quot;Thailand&quot;              &quot;Sweden&quot;               
+## [10] &quot;USA-African American&quot;  &quot;USA-European American&quot; &quot;Colombia&quot;             
+## [13] &quot;Jordan&quot;                &quot;China-Chongqing&quot;</code></pre>
+</div>
+</div>
+<div id="plotting-family-decision-making" class="section level2">
+<h2>Plotting Family Decision Making</h2>
+<p>I can begin by making a plot of Age and Family Decision Making.</p>
+<pre class="r"><code>data %&gt;%
+ggplot(
+  aes(x=Age_Exact, 
+      y = FDM, 
+      group = Country, 
+      color = Country)) + 
+  geom_line(stat = &quot;summary&quot;, fun = &quot;mean&quot;) +
+  theme_bw() +
+  scale_color_manual(values=c(&quot;#000000&quot;,&quot;#ff0000&quot;,&quot;#8F00FF&quot;, &quot;#0bb4ff&quot;, &quot;#50e991&quot;, &quot;#e6d800&quot;, &quot;#fb19f5&quot;, &quot;#ffa300&quot;, &quot;#dc0ab4&quot;, &quot;#0000fB&quot;, &quot;#b3d4ff&quot;, &quot;#00bfa0&quot;, &quot;#00ffff&quot;)) +
+  labs(
+    x = &quot;Age&quot;, 
+    y = &quot;Family Decision Making&quot;, 
+    color = &quot;Country&quot;,
+    title = &quot;Age and Country Effects on Family Decision Making&quot;)</code></pre>
+<p><img src="p02_files/figure-html/base%20plot-1.png" width="768" /></p>
+<p>This plot is ok, but there are majors ways to improve it. There is no
+rhyme or reason to the colors included, and it’s hard to visualize the
+trend of “Family Decision Making increases as adolescents increase in
+age.”</p>
+<p>My first suggestion is to smooth out the lines.</p>
+<pre class="r"><code>data %&gt;%
+ggplot(
+  aes(x=Age_Exact, 
+      y = FDM, 
+      group = Country, 
+      color = Country)) + 
+  geom_smooth(
+    size = .5,
+    span = 1,
+    se = FALSE) +
+  theme_bw() +
+  scale_color_manual(values=c(&quot;#000000&quot;,&quot;#ff0000&quot;,&quot;#8F00FF&quot;, &quot;#0bb4ff&quot;, &quot;#50e991&quot;, &quot;#e6d800&quot;, &quot;#fb19f5&quot;, &quot;#ffa300&quot;, &quot;#dc0ab4&quot;, &quot;#0000fB&quot;, &quot;#b3d4ff&quot;, &quot;#00bfa0&quot;, &quot;#00ffff&quot;)) +
+  labs(
+    x = &quot;Age&quot;, 
+    y = &quot;Family Decision Making&quot;, 
+    color = &quot;Country&quot;,
+    title = &quot;Age and Country Effects on Family Decision Making&quot;)</code></pre>
+<p><img src="p02_files/figure-html/smooth%20out-1.png" width="768" /></p>
+<p>This had the effect of minimizing the noise of the first graph. It is
+easier to see the overall positive linear trend of Family Decision
+Making as adolescents get older.</p>
+<p>The next suggestion is to combine some of the data. For example, we
+can combine the United states ethnicities to create one USA line.</p>
+<pre class="r"><code>Country_Collapse &lt;- data %&gt;%
+  mutate(Country = case_when(
+    Country %in% c(&quot;USA-African American&quot;, &quot;USA-European American&quot;, &quot;USA-Hispanic&quot;) ~ &quot;United States&quot;,
+    Country %in% c(&quot;China-Shanghai&quot;, &quot;China-Chongqing&quot;) ~ &quot;China&quot;,
+    Country %in% c(&quot;Italy-Naples&quot;, &quot;Italy-Rome&quot;) ~ &quot;Italy&quot;,
+    Country == &quot;Kenya&quot; ~ &quot;Kenya&quot;,
+    Country == &quot;Philippines&quot; ~ &quot;Philippines&quot;,
+    Country == &quot;Thailand&quot; ~ &quot;Thailand&quot;,
+    Country == &quot;Sweden&quot; ~ &quot;Sweden&quot;,
+    Country == &quot;Colombia&quot; ~ &quot;Colombia&quot;,
+    Country == &quot;Jordan&quot; ~ &quot;Jordan&quot;,
+    Country == &quot;India&quot; ~ &quot;India&quot;
+  ))</code></pre>
+<p>Now we can create a plot that just reflects countries.</p>
+<pre class="r"><code>Country_Collapse %&gt;%
+ggplot(
+  aes(x=Age_Exact, 
+      y = FDM, 
+      group = Country, 
+      color = Country)) + 
+  geom_smooth(
+    aes(group = 1),
+    method = &quot;loess&quot;,
+    formula = y~x,
+    se = TRUE,
+    alpha = .2,
+    color = &quot;black&quot;,
+    size = .5
+  ) +
+  geom_smooth(
+    size = .5,
+    span = 1,
+    se = FALSE
+    ) +
+  theme_bw() +
+  scale_color_manual(values=c(&quot;#ff0000&quot;,&quot;#8F00FF&quot;, &quot;#0bb4ff&quot;, &quot;#50e991&quot;, &quot;#e6d800&quot;, &quot;#fb19f5&quot;, &quot;#ffa300&quot;, &quot;#0000fB&quot;, &quot;maroon&quot;, &quot;#00bfa0&quot;)) +
+  labs(
+    x = &quot;Age&quot;, 
+    y = &quot;Family Decision Making&quot;, 
+    color = &quot;Country&quot;,
+    title = &quot;Country Effects on Family Decision Making Over Time&quot;)</code></pre>
+<p><img src="p02_files/figure-html/collapse%20countries%20plot-1.png" width="768" /></p>
+<p>This helped clean up some of the clutter of the extra lines. I also
+included the average FDM line to help show the distinct differences
+across countries.</p>
+<pre class="r"><code>Country_Collapse &lt;- Country_Collapse %&gt;%
+  mutate(Index1 = case_when(
+    Index1 == &quot;1&quot; ~ &quot;Time 1&quot;,
+    Index1 == &quot;2&quot; ~ &quot;Time 2&quot;,
+    Index1 == &quot;3&quot; ~ &quot;Time 3&quot;
+  ))
+view(Country_Collapse)
+
+Country_Collapse %&gt;% ggplot(
+  aes(x=Age_Exact, 
+      y = FDM, 
+      group = Country, 
+      color = Country)) + 
+  geom_smooth(
+    aes(group = 1),
+    method = &quot;loess&quot;,
+    formula = y~x,
+    se = TRUE,
+    alpha = .2,
+    color = &quot;black&quot;,
+    size = .5
+  ) +
+  facet_wrap(~Index1, scales = &quot;free&quot;) +
+  geom_smooth(
+    size = .5,
+    span = 1,
+    se = FALSE
+    ) +
+  theme_bw() +
+  scale_color_manual(values=c(&quot;#ff0000&quot;,&quot;#8F00FF&quot;, &quot;#0bb4ff&quot;, &quot;#50e991&quot;, &quot;#e6d800&quot;, &quot;#fb19f5&quot;, &quot;#ffa300&quot;, &quot;#0000fB&quot;, &quot;maroon&quot;, &quot;#00bfa0&quot;)) +
+  labs(
+    x = &quot;Age&quot;, 
+    y = &quot;Family Decision Making&quot;, 
+    color = &quot;Country&quot;,
+    title = &quot;Country Effects on Family Decision Making Over Time&quot;)</code></pre>
+<p><img src="p02_files/figure-html/facet%20by%20index-1.png" width="1152" /></p>
+<p>The benefit of this method is we can hilight the fact that this was
+longitudinal data. We can more easily see how the data changes across
+time. For comparison, the plot below has the axes locked across all
+plots. That can help us see changes that aren’t warped by the axes.</p>
+<p><img src="p02_files/figure-html/facet%20fixed%20width-1.png" width="1152" /></p>
+<p>A final way we can look at the data is using a spaghetti plot. A
+spaghetti plot takes all individual observations and plots them onto the
+graph.</p>
+<pre class="r"><code>Country_Collapse %&gt;% ggplot(
+  aes(x=Age_Exact, 
+      y = FDM, 
+      group = ID, 
+      color = Country)) + 
+ geom_smooth(
+    size = .5,
+    span = 1,
+    se = FALSE,
+    show.legend = FALSE
+    ) +
+facet_wrap(~Country, scales = &quot;free&quot;) +
+  theme_bw() +
+scale_color_manual(values=c(&quot;#ff0000&quot;,&quot;#8F00FF&quot;, &quot;#0bb4ff&quot;, &quot;#50e991&quot;, &quot;#e6d800&quot;, &quot;#fb19f5&quot;, &quot;#ffa300&quot;, &quot;#0000fB&quot;, &quot;black&quot;, &quot;#00bfa0&quot;)) +
+  labs(
+    x = &quot;Age&quot;, 
+    y = &quot;Family Decision Making&quot;, 
+    color = &quot;Country&quot;,
+    title = &quot;Country Effects on Family Decision Making Over Time&quot;)+
+  theme(plot.title = element_text(size = 20),
+        axis.title = element_text(size = 15),
+        axis.text = element_text(size = 12))</code></pre>
+<p><img src="p02_files/figure-html/spaghetti-1.png" width="1152" /></p>
+<p>As this graph currently stands, I would only use it to demonstrate
+that there is a lot of variation within each country. It can look
+confusing to the readers and be hard to understand.</p>
+</div>
 
 
 
