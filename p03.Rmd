@@ -1,10 +1,9 @@
 ---
-title: "Piece_3"
+title: "Creating a Monte Carlo Simulation"
 author: "Benjamin Egan"
-date: "2025-02-21"
 output: html_document
 ---
-
+##### Created on 2/21/25
 
 ## Monte Carlo Simulation - Brown M&Ms
 

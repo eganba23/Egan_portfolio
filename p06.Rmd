@@ -1,9 +1,10 @@
 ---
-title: "Piece_6"
+title: "Helpful Code in R"
 author: "Benjamin Egan"
-date: "3/20/25"
 output: html_document
 ---
+
+##### Created on 3/20/25
 
 ```{r setup, include=FALSE}
 

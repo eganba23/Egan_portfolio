@@ -9,9 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Benjamin Egan" />
 
 
-<title>Portfolio 6</title>
+<title>Helpful Code in R</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -290,18 +291,339 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 6</h1>
+<h1 class="title toc-ignore">Helpful Code in R</h1>
+<h4 class="author">Benjamin Egan</h4>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<div id="created-on-32025" class="section level5">
+<h5>Created on 3/20/25</h5>
+</div>
+<div
+id="this-is-a-living-document.-as-of-right-now-this-document-was-updated-on-3202025.-the-current-date-is"
+class="section level4">
+<h4>*This is a living document. As of right now, this document was
+updated on [3/20/2025]. The current date is:</h4>
+<p>April 03 2025</p>
+</div>
+<div id="useful-lines-of-code" class="section level1">
+<h1>Useful Lines of Code</h1>
+<p>Up until this point in time, I have been looking back through each of
+my labs to pull and adapt lines of code. In this piece, I will be
+walking through all of my labs and extracting the helpful functions I
+have been repeatedly using. Each section of code is an example of how I
+have used each function. You can also examine the description r provides
+by plugging ?function_name() into the console</p>
+<div id="filter" class="section level2">
+<h2>Filter()</h2>
+<pre class="r"><code>true_plastic &lt;- plastic_waste %&gt;%
+  filter(plastic_waste_per_cap &lt; 3, mismanaged_plastic_waste &lt; 3000000, total_pop &lt; 250000000, coastal_pop &lt; 150000000)</code></pre>
+<p>Filter() is aptly names, as it filters out certain data points. In
+this lab (<a
+href="https://datascience4psych.github.io/DataScience4Psych/lab02.html"
+class="uri">https://datascience4psych.github.io/DataScience4Psych/lab02.html</a>),
+I used filter to exclude certain countries from a visual.</p>
+</div>
+<div id="mutate" class="section level2">
+<h2>Mutate()</h2>
+<p>Mutate() has been used across the class in different capacities. I’ve
+included examples below on how I have used mutate used:</p>
+<pre class="r"><code>nobel_living &lt;- nobel %&gt;%
+  mutate(country_us = if_else(country == &quot;USA&quot;, &quot;USA&quot;, &quot;Other&quot;)
+  )</code></pre>
+<p>Here mutate was used to create a binary categorical variable. It kept
+USA as USA and changed everything else to “other”</p>
+<div id="list---ca-b-c-etc." class="section level4">
+<h4>List - c(a, b, c, etc.)</h4>
+<pre class="r"><code>lq_USA &lt;- laquinta %&gt;%
+  mutate(country = case_when(
+    state %in% state.abb ~ &quot;United States&quot;,
+    state %in% c(&quot;ON&quot;, &quot;BC&quot;) ~ &quot;Canada&quot;,
+    state == &quot;ANT&quot; ~ &quot;Colombia&quot;,
+    state %in% c(&quot;AG&quot;, &quot;QR&quot;, &quot;CH&quot;, &quot;NL&quot;, &quot;VE&quot;,&quot;PU&quot;,&quot;SL&quot;) ~ &quot;Mexico&quot;,
+    state == &quot;FM&quot; ~ &quot;Honduras&quot;
+  ))</code></pre>
+<p>This is a more complex version of mutate(). Here I created a new
+country variable by taking all the cities and recoding them into their
+countries. The list function [c()] is useful for when you have multiple
+items you are attempting to recode.</p>
+</div>
+</div>
+<div id="wide-to-long-transformation---pivot_longer"
+class="section level2">
+<h2>Wide to Long transformation - pivot_longer()</h2>
+<pre class="r"><code>staff_long &lt;- staff %&gt;%
+  pivot_longer(cols = -faculty_type, names_to = &quot;year&quot;)</code></pre>
+<p>pivot_longer() is useful for changing datasets from wide to long. The
+first argument is the data. The second argument, cols, is where you
+specify which columns to pivot into longer format – in this case all
+columns except for the faculty_type. The third argument, names_to, is a
+string specifying the name of the column to create from the data stored
+in the column names of data – in this case year.</p>
+</div>
+<div id="input---tibble" class="section level2">
+<h2>Input - tibble()</h2>
+<p>string input should go in qutations while numbers would be input the
+same.</p>
+<pre class="r"><code>Name_of_table &lt;- tribble(
+  ~IV1, ~IV2, ~IV3,
+  &quot;score&quot;,&quot;score&quot;,&quot;score&quot;
+)
+
+#example
+Kansas_Mask &lt;- tribble(
+  ~date, ~count, ~mask_status,
+  &quot;7/12&quot;, 25.5, &quot;mask&quot;,
+  &quot;7/13&quot;, 19.8, &quot;mask&quot;,
+  &quot;7/14&quot;, 19.7, &quot;mask&quot;,
+  &quot;7/15&quot;, 20.5, &quot;mask&quot;,
+  &quot;7/12&quot;, 9.8, &quot;no mask&quot;,
+  &quot;7/13&quot;, 9.2, &quot;no mask&quot;,
+  &quot;7/14&quot;, 9.5, &quot;no mask&quot;,
+  &quot;7/15&quot;, 9.8, &quot;no mask&quot;
+)</code></pre>
+</div>
+<div id="functions---function" class="section level2">
+<h2>Functions - function()</h2>
+<pre class="r"><code>function_name &lt;- function(thing_you_change){
+  
+  #function pulled from lab 8 scripts
+   page &lt;- read_html(url)
+  
+  # scrape titles
+  titles &lt;- page %&gt;%
+    html_nodes(&quot;.iteminfo&quot;) %&gt;%
+    html_node(&quot;h3 a&quot;) %&gt;%
+    html_text() %&gt;%
+    str_squish()
+  
+  # scrape links
+  links &lt;- page %&gt;%
+    html_nodes(&quot;.iteminfo&quot;) %&gt;%
+    html_node(&quot;h3 a&quot;) %&gt;%
+    html_attr(&quot;href&quot;) %&gt;%
+    str_replace(&quot;.&quot;, &quot;collections.ed.ac.uk&quot;)
+  
+  
+  # scrape artists 
+  artists &lt;- page %&gt;%
+    html_nodes(&quot;.iteminfo&quot;) %&gt;%
+    html_node(&quot;.artist&quot;) %&gt;%
+    html_text() %&gt;%
+    str_squish()
+  
+  # create and return tibble
+  tibble(
+    title = titles,
+    artist = artists,
+    link = links
+  )
+  
+}</code></pre>
+</div>
+<div id="ggplot-and-graphing" class="section level2">
+<h2>ggplot and graphing</h2>
+<p>A goal of this course was to get students comfortable graphing data.
+was to get students familiar with different ways to plot data using
+ggplot(). Below I include different types of plots you can create using
+ggplot():</p>
+<div id="generally-useful-functions" class="section level4">
+<h4>Generally useful functions</h4>
+<p>theme_bw() removes all gray from the graph. labs() adds titles and
+labesl to the graphs. scale_color_manual() allows for you to manually
+set colors. fct_reorder(data, variable) allows for you to reverse the
+order of a variable.</p>
+</div>
+<div id="histogram---geom_histogram" class="section level3">
+<h3>Histogram - geom_histogram()</h3>
+<p>binwidth changes how many observations fit within each bar.</p>
+<pre class="r"><code>true_plastic %&gt;%
+ggplot(aes(
+  x = plastic_waste_per_cap)) +
+  geom_histogram(color = &quot;white&quot;, binwidth = 0.2) +
+  theme_bw()+
+  labs(
+      x = &quot;Plastic waste per captia by country&quot;,
+      y = &quot;Amount&quot;,
+      title = &quot;Plastic Waste&quot;
+  )</code></pre>
+<p><img src="p06_files/figure-html/histogram-1.png" width="672" /></p>
+</div>
+<div id="density-plot---geom_density" class="section level3">
+<h3>Density plot - geom_density()</h3>
+<p>Alpha changes the opacity of the graph.</p>
+<pre class="r"><code>true_plastic %&gt;%
+ggplot(aes(
+    x = plastic_waste_per_cap,
+    color = continent,
+    fill = continent
+  )) +
+  geom_density(alpha = 0.7) +
+  theme_bw()+
+  labs(
+      x = &quot;Plastic waste per captia&quot;,
+      y = &quot;amount&quot;,
+      title = &quot;Density map of Plastic Waste by country&quot;
+  )</code></pre>
+<p><img src="p06_files/figure-html/density%20plot-1.png" width="672" /></p>
+</div>
+<div id="boxplot---geom_boxplot" class="section level3">
+<h3>Boxplot - geom_boxplot()</h3>
+<pre class="r"><code>true_plastic %&gt;%
+ggplot(aes(
+    x = continent,
+    y = plastic_waste_per_cap
+  )) +
+  geom_boxplot() +
+  theme_bw()+
+labs(
+      x = &quot;Plastic waste per captia&quot;,
+      y = &quot;amount&quot;,
+      title = &quot;Side by side of Plastic Waste by Continent&quot;
+  )</code></pre>
+<p><img src="p06_files/figure-html/boxplot-1.png" width="672" /></p>
+</div>
+<div id="violin-plot---geom_violin" class="section level3">
+<h3>Violin plot - geom_violin()</h3>
+<pre class="r"><code>true_plastic %&gt;%
+ggplot(aes(
+    x = continent,
+    y = plastic_waste_per_cap
+  )) +
+ geom_violin() +
+  theme_bw()+
+  labs(
+      x = &quot;Continent&quot;,
+      y = &quot;Plastic Waste&quot;,
+      title = &quot;Violin map of Plastic Waste by Continent&quot;
+  )</code></pre>
+<p><img src="p06_files/figure-html/violin%20plot-1.png" width="672" /></p>
+</div>
+<div id="scatterplot---geom_point" class="section level3">
+<h3>Scatterplot - geom_point</h3>
+<pre class="r"><code>true_plastic %&gt;%
+ggplot(aes(
+    x = mismanaged_plastic_waste,
+    y = plastic_waste_per_cap,
+    color = continent
+  )) +
+  geom_point() +
+  theme_bw()+
+labs(
+      x = &quot;Mismanaged Plastic Waste&quot;,
+      y = &quot;Plastic Waste&quot;,
+      title = &quot;Plastic Waste x mismanaged plastic waste by Continent&quot;,
+      color = &quot;Continent&quot;
+  )</code></pre>
+<p><img src="p06_files/figure-html/scatterplot-1.png" width="672" /></p>
+</div>
+<div id="break-down-graphs-by-levels-of-a-variable---facet_wrap"
+class="section level3">
+<h3>Break down graphs by levels of a variable - facet_wrap()</h3>
+<p>Place the variable you want to be represented by the different graphs
+inside: (~variable of interest). Something to note is that the axes You
+can input (scale = “free”) to un</p>
+<pre class="r"><code>nobel_living_science %&gt;%
+ggplot(aes(
+    x = country_us,
+  )) +
+  facet_wrap(~category)+
+  theme_bw()+
+  geom_bar()+
+  coord_flip()+
+  labs(
+      x = &quot;Country&quot;,
+      y = &quot;Number of Prize Winners&quot;,
+      title = &quot;Relationship Between Prize Winner and Country&quot;
+  )</code></pre>
+<p><img src="p06_files/figure-html/facet-1.png" width="672" /></p>
+</div>
+<div id="making-a-line-graph---geom_line" class="section level3">
+<h3>Making a line graph - geom_line</h3>
+<pre class="r"><code>staff_long %&gt;%
+  ggplot(aes(
+    x = year,
+    y = value,
+    group = faculty_type,
+    color = faculty_type
+  )) +
+  geom_line()+
+  theme_bw()+
+  labs(
+    x = &quot;Year&quot;,
+    y = &quot;Percent of Total Instructional Staff&quot;,
+    title = &quot;Trends in Instructional Staff Employee Status&quot;,
+    color = &quot;Faculty Status&quot;
+  )</code></pre>
+<p><img src="p06_files/figure-html/graph-1.png" width="768" /></p>
+</div>
+<div id="changing-parts-of-your-visual---theme" class="section level3">
+<h3>Changing parts of your visual - theme()</h3>
+<p>allows you to change axes, legends, the visuals, etc. You can use
+angle to change the angle of the axes</p>
+<pre class="r"><code>data(&quot;Whickham&quot;)
+Whickham %&gt;%
+ggplot(aes(
+   x=age,
+   fill = fct_rev(smoker)
+   )) + 
+    geom_histogram(color = &quot;black&quot;)+
+  theme_bw()+
+  labs(
+    x = &quot;Age&quot;,
+    y = &quot;&quot;,
+    title = &quot;Smokers and non smokers at baseline&quot;,
+    fill = &quot;Are they a smoker?&quot;
+  )+
+    theme(plot.title = element_text(size = 20),
+        axis.title = element_text(size = 15),
+        axis.text = element_text(size = 12),
+        legend.title = element_text(size = 15),
+        legend.text = element_text(size = 15),
+         axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=.5)
+        )</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="p06_files/figure-html/theme-1.png" width="672" /></p>
+</div>
+<div id="add-text-to-a-graph---geom_col" class="section level3">
+<h3>Add text to a graph - geom_col()</h3>
+</div>
+<div id="handling-categorical-data---geom_jitter"
+class="section level3">
+<h3>Handling categorical data - geom_jitter()</h3>
+<p>This data is a likert scale, hiding the true amount of data. Can use
+jitter to shift datapoints vertical (height =) or horizontal (width
+=).</p>
+<pre class="r"><code>attractive_score &lt;- evals %&gt;%
+  ggplot(aes(
+    x = score,
+    y = bty_avg
+  ))+
+  labs(
+    x = &quot;Score&quot;,
+    y = &quot;Beauty rating&quot;,
+    title = &quot;Relationship between professor rating and attractiveness&quot;,
+    subtitle = &quot;Average professor evaluation score: (1) very unsatisfactory - (5) excellent&quot;
+  )
+
+attractive_score + geom_point()</code></pre>
+<p><img src="p06_files/figure-html/geom_jitter-1.png" width="672" /></p>
+<pre class="r"><code>attractive_score + geom_jitter(width = .05, alpha = .6)</code></pre>
+<p><img src="p06_files/figure-html/geom_jitter-2.png" width="672" /></p>
+</div>
+<div id="line-of-best-fit---geom_smooth" class="section level3">
+<h3>Line of best fit - geom_smooth()</h3>
+<pre class="rsmooth"><code>attractive_score + geom_smooth(se = FALSE, color = &quot;black&quot;, span = 1)
+</code></pre>
+</div>
+</div>
+<div id="other-useful-functions" class="section level2">
+<h2>Other useful functions</h2>
+<p>!(Here is where your caption should be, but change these parentheses
+to [])(File Name) - Lets you embed an image</p>
+</div>
+</div>
 
 
 

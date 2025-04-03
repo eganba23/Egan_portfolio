@@ -1,9 +1,9 @@
 ---
-title: "Piece 2"
+title: " Tragectories and Variations of Family Decision Making Across Countires"
 author: "Benjamin Egan"
-date: "2025-02-06"
 output: html_document
 ---
+##### Created on 2/6/2025
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -33,7 +33,7 @@ data <- read_spss("data/FDM Dataset for Data Science_2.sav")
 
 
 
-## Tragectories and Variations of Family Decision Making Across Countires
+#### Objective
 
 In this piece, I will further demonstrate my graphing abilities.
 

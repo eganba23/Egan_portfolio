@@ -1,9 +1,9 @@
 ---
-title: "Piece_4"
+title: "Tinkering Around Tidy Tuesday"
 author: "Benjamin Egan"
-date: "2025-03-03"
 output: html_document
 ---
+##### Created on 3/3/25
 
 ```{r load-packages, message = FALSE, echo = FALSE}
 library(tidyverse) 
