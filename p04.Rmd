@@ -42,7 +42,8 @@ summer_movie_genres %>%
     y = "Movie Genre",
     x = NULL,
     title = "Movies with Summer in the title"
-  )
+  )+
+  theme_bw()
 ```
 
 We can see that there are a large amount of drama, comedy, and romance films with "Summer" in the title compared to other genres. One category that surprised me were the number of reality shows that don't have "Summer" in the title. It feels like there would be an appeal to the "Hot, Wet, and Wild" aspect of summer and reality TV.

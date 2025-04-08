@@ -1,5 +1,5 @@
 ---
-title: " Tragectories and Variations of Family Decision Making Across Countires"
+title: " Tragectories and Variations of Family Decision Making Across Countries"
 author: "Benjamin Egan"
 output: html_document
 ---

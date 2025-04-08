@@ -1,5 +1,5 @@
 ---
-title: "Helpful Code in R"
+title: "R Code Cheatsheet"
 author: "Benjamin Egan"
 output: html_document
 ---

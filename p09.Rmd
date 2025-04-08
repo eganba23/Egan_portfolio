@@ -5,7 +5,7 @@ output: html_document
 ---
 #### Created 4/7/25
 
-#### Note - Some of the code chunks I provide will run loops of code for up to 10,000 attempts. For speed, the code provided by ChatGPT will not run. If you would like for it to run, you need to change eval to TRUE.
+#### Note - Some of the code chunks I provide will run simulations up to 10,000 attempts. To save all of us time, the code provided by ChatGPT will be present but not run through the segments of code. If you would like to see the results for yourself, you need to change eval to TRUE in the [R Markdown file](https://drive.google.com/file/d/1t3HSKBc1qbgbV9Qa-QPdp0l9-nxkv3KM/view?usp=sharing).
 
 
 ```{r libaries, include = FALSE}
@@ -719,3 +719,12 @@ if (!success) {
 ```
 
 At this point, I figure either the code was faulty, or this was simply an impossible task. I let chatGPT rest.
+
+## So... is it helpful?
+
+Did ChatGPT get me the results I wanted? Absolutely not. But I'm also not 100% convinced it is possible. If you think you can create the results I am looking for, please email me at be62@comcast.net, and we can laugh together at the simplicity of the answer.
+
+### BUT
+
+I learned from the process. I have gained knowledge about how to repeatedly simulate data, write nested if/else statements, read complex code, etc. that I would not have known otherwise. I also got better at being able to understand my problems and concisely articulate where I am struggling through this process.
+

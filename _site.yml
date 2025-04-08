@@ -1,4 +1,4 @@
-name: "portfolio"
+name: "Benjamin Egan's Portfolio"
 output_dir: docs
 navbar:
   title: "Portfolio"
@@ -7,23 +7,27 @@ navbar:
       href: index.html
     - text: "About"
       href: about.html
-    - text: "Portfolio 1"
+    - text: "Piece 1"
       href: p01.html
-    - text: "Portfolio 2"
+    - text: "Piece 2"
       href: p02.html
-    - text: "Portfolio 3"
+    - text: "Piece 3"
       href: p03.html
-    - text: "Portfolio 4"
+    - text: "Piece 4"
       href: p04.html
-    - text: "Portfolio 5"
+    - text: "Piece 5"
       href: p05.html
-    - text: "Portfolio 6"
+    - text: "Piece 6"
       href: p06.html
-    - text: "Portfolio 7"
+    - text: "Piece 7"
       href: p07.html
-    - text: "Portfolio 8"
+    - text: "Piece 8"
       href: p08.html
-    - text: "Portfolio 9"
+    - text: "Piece 9"
       href: p09.html
-    - text: "Portfolio 10"
+    - text: "Piece 10"
       href: p10.html
+
+output:
+  html_document:
+    css: Aesthetics.css
