@@ -9,9 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Benjamin Egan" />
 
 
-<title>Portfolio 9</title>
+<title>Working with ChatGPT</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -32,6 +33,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -290,18 +293,888 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 9</h1>
+<h1 class="title toc-ignore">Working with ChatGPT</h1>
+<h4 class="author">Benjamin Egan</h4>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<div id="created-4725" class="section level4">
+<h4>Created 4/7/25</h4>
+</div>
+<div
+id="note---some-of-the-code-chunks-i-provide-will-run-loops-of-code-for-up-to-10000-attempts.-for-speed-the-code-provided-by-chatgpt-will-not-run.-if-you-would-like-for-it-to-run-you-need-to-change-eval-to-true."
+class="section level4">
+<h4>Note - Some of the code chunks I provide will run loops of code for
+up to 10,000 attempts. For speed, the code provided by ChatGPT will not
+run. If you would like for it to run, you need to change eval to
+TRUE.</h4>
+<p>In the process of creating Portfolio 8, I came across some trouble
+getting the results I wanted. As a reminder, the problem was to create
+simulated data for a 2(Yes/No Sugar) x 2(Yes/No Caffeine) ANOVA, with
+perceived distance as the dependent variable. In an ideal world, I
+wanted there to be a main effect of caffeine (caffeine decreased
+perceived distance), no main effect of sugar, and an interaction, such
+that the combination of both sugar and caffeine exponentially decreased
+perceived distance.</p>
+<p>Here is a crude graph depicting what I was looking to create:</p>
+<p><img src="ideal_results.jpeg" /> <br/></p>
+<p>Ultimately I got close, but the green line had a positive slope,
+indicating adding sugar actually increased perceived distance. I decided
+to ask ChatGPT if it had any suggestions. I am going to include my
+questions asked, it’s response/suggested code, my evaluation of the
+code, etc.</p>
+</div>
+<div id="the-inital-ask" class="section level2">
+<h2>The inital ask</h2>
+<p>I began by providing chatGPT the context, my problem, and the R
+markdown file for Portfolio 8 (<a
+href="https://github.com/eganba23/Portfolio_8"
+class="uri">https://github.com/eganba23/Portfolio_8</a>). Here is is my
+question:</p>
+<div
+id="i-am-trying-to-create-data-for-a-lab.-it-is-a-2x2-design-with-two-ivs-sugar-and-caffeine-and-the-dv-is-distance.-i-am-attaching-the-r-file-i-have-used.-i-want-there-to-be-a-significant-main-effect-of-caffeine-and-interaction-but-no-main-effect-of-sugar.-i-need-for-going-from-no-sugar-to-sugar-to-always-decrease-but-in-a-non-significant-way."
+class="section level4">
+<h4>I am trying to create data for a lab. It is a 2x2 design, with two
+IVs, sugar and caffeine, and the dv is distance. I am attaching the R
+file I have used. I want there to be a significant main effect of
+caffeine and interaction, but no main effect of sugar. I need for going
+from no sugar to sugar to always decrease, but in a non-significant
+way.</h4>
+<p>ChatGPT responded with a brief summary of my ask and defined out the
+terms. It suggested this mean structure and the effects:</p>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Sugar
+</th>
+<th style="text-align:left;">
+Caffeine
+</th>
+<th style="text-align:right;">
+Mean_Distance
+</th>
+<th style="text-align:left;">
+Effect
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+No
+</td>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+No
+</td>
+<td style="text-align:right;border-left:1px solid;border-right:1px solid;">
+50
+</td>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+Yes
+</td>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+No
+</td>
+<td style="text-align:right;border-left:1px solid;border-right:1px solid;">
+48
+</td>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+(small drop)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+No
+</td>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+Yes
+</td>
+<td style="text-align:right;border-left:1px solid;border-right:1px solid;">
+60
+</td>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+(big jump)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+Yes
+</td>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+Yes
+</td>
+<td style="text-align:right;border-left:1px solid;border-right:1px solid;">
+56
+</td>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+(smaller jump)
+</td>
+</tr>
+</tbody>
+</table>
+<p>It suggested the setup provided a main effect of caffeine, a slight
+drop with sugar in both levels, and an interaction. I knew it didn’t
+acknowledge that I wanted sugar to be non-significant, so I replied:</p>
+</div>
+<div
+id="sorry.-i-need-the-main-effect-of-caffeine-to-be-adding-caffeine-decrease-distance-scores.-the-interaction-would-mean-that-the-combination-of-sugar-and-caffeine-reduced-scores-the-most"
+class="section level4">
+<h4>Sorry. I need the main effect of caffeine to be adding caffeine
+decrease distance scores. The interaction would mean that the
+combination of sugar and caffeine reduced scores the most</h4>
+It then understood that I did not want a main effect for sugar. It
+suggested these means:
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Sugar
+</th>
+<th style="text-align:left;">
+Caffeine
+</th>
+<th style="text-align:right;">
+Mean_Distance
+</th>
+<th style="text-align:left;">
+Effect
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+No
+</td>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+No
+</td>
+<td style="text-align:right;border-left:1px solid;border-right:1px solid;">
+50
+</td>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+Yes
+</td>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+No
+</td>
+<td style="text-align:right;border-left:1px solid;border-right:1px solid;">
+48
+</td>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+(small drop)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+No
+</td>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+Yes
+</td>
+<td style="text-align:right;border-left:1px solid;border-right:1px solid;">
+45
+</td>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+(big drop from 50)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+Yes
+</td>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+Yes
+</td>
+<td style="text-align:right;border-left:1px solid;border-right:1px solid;">
+40
+</td>
+<td style="text-align:left;border-left:1px solid;border-right:1px solid;">
+(even bigger drop from 48)
+</td>
+</tr>
+</tbody>
+</table>
+<p>It suggested the setup provided a strong negative main effect of
+caffeine, sugar slightly lowers scores in both caffeine conditions (so
+consistent, but subtle), and an interaction.</p>
+<p>I told it their specifications were wonderful, and I wanted the
+code.</p>
+</div>
+</div>
+<div id="the-first-code" class="section level2">
+<h2>The first code</h2>
+<p>ChatGPT provided me with it’s first iteration of the code below:</p>
+<pre class="r"><code>set.seed(123)  # for reproducibility
+library(tidyverse)
+library(ggplot2)
+library(emmeans)
+
+# Number of participants per condition
+n_per_cell &lt;- 30
+
+# Define means to create the desired effects
+means &lt;- tibble(
+  sugar = rep(c(&quot;No&quot;, &quot;Yes&quot;), each = 2),
+  caffeine = rep(c(&quot;No&quot;, &quot;Yes&quot;), times = 2),
+  mean_distance = c(50, 45, 48, 40),  # NoS/NoC, NoS/YesC, YesS/NoC, YesS/YesC
+  sd = 5
+)
+
+# Generate the dataset
+sim_data &lt;- means %&gt;%
+  rowwise() %&gt;%
+  mutate(
+    distance = list(rnorm(n_per_cell, mean = mean_distance, sd = sd)),
+    participant = list(1:n_per_cell)
+  ) %&gt;%
+  unnest(c(distance, participant)) %&gt;%
+  mutate(
+    sugar = factor(sugar, levels = c(&quot;No&quot;, &quot;Yes&quot;)),
+    caffeine = factor(caffeine, levels = c(&quot;No&quot;, &quot;Yes&quot;))
+  )
+
+
+# Fit ANOVA model
+model &lt;- aov(distance ~ sugar * caffeine, data = sim_data)
+summary(model)
+
+# Plot the interaction
+ggplot(sim_data, aes(x = caffeine, y = distance, fill = sugar)) +
+  stat_summary(fun = mean, geom = &quot;bar&quot;, position = position_dodge(.9)) +
+  stat_summary(fun.data = mean_se, geom = &quot;errorbar&quot;, width = .2,
+               position = position_dodge(.9)) +
+  labs(title = &quot;Interaction of Sugar and Caffeine on Distance&quot;,
+       y = &quot;Distance&quot;, x = &quot;Caffeine&quot;) +
+  theme_minimal()</code></pre>
+<p>The idea is basic. They identify the number of participants per group
+and create the means of each group. From there, they simulate the data
+based on the suggested group mean and a sd of 5 using rnorm. They expand
+the list-column into rows and columns, use aov() to test the data with a
+factorial ANOVA, and then plot the results.</p>
+<p>This almost worked, as there was a main effect for sugar. I told chat
+GPT this, and they suggested to alter the means where sugar was
+present.</p>
+<pre class="r"><code>set.seed(123)
+library(tidyverse)
+library(ggplot2)
+library(emmeans)
+
+n_per_cell &lt;- 30
+
+# Define revised means: smaller sugar effect
+means &lt;- tibble(
+  sugar = rep(c(&quot;No&quot;, &quot;Yes&quot;), each = 2),
+  caffeine = rep(c(&quot;No&quot;, &quot;Yes&quot;), times = 2),
+  mean_distance = c(50, 45, 49, 43.5),  # adjusted sugar effect
+  sd = 5
+)
+
+sim_data &lt;- means %&gt;%
+  rowwise() %&gt;%
+  mutate(
+    distance = list(rnorm(n_per_cell, mean = mean_distance, sd = sd)),
+    participant = list(1:n_per_cell)
+  ) %&gt;%
+  unnest(c(distance, participant)) %&gt;%
+  mutate(
+    sugar = factor(sugar, levels = c(&quot;No&quot;, &quot;Yes&quot;)),
+    caffeine = factor(caffeine, levels = c(&quot;No&quot;, &quot;Yes&quot;))
+  )
+
+model &lt;- aov(distance ~ sugar * caffeine, data = sim_data)
+summary(model)</code></pre>
+<pre><code>##                 Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+## sugar            1   92.1    92.1   4.548   0.0351 *  
+## caffeine         1  744.7   744.7  36.787 1.69e-08 ***
+## sugar:caffeine   1   36.9    36.9   1.824   0.1795    
+## Residuals      116 2348.1    20.2                     
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code># Plot the interaction
+ggplot(sim_data, aes(x = caffeine, y = distance, fill = sugar)) +
+  stat_summary(fun = mean, geom = &quot;bar&quot;, position = position_dodge(.9)) +
+  stat_summary(fun.data = mean_se, geom = &quot;errorbar&quot;, width = .2,
+               position = position_dodge(.9)) +
+  labs(title = &quot;Interaction of Sugar and Caffeine on Distance&quot;,
+       y = &quot;Distance&quot;, x = &quot;Caffeine&quot;) +
+  theme_minimal()</code></pre>
+<p><img src="p09_files/figure-html/chat%20second%20suggestion-1.png" width="672" /></p>
+<p>By changing the means of the yes sugar groups, Chat managed to get
+the main effect of sugar to be less significant. Unfortunately, the
+interaction became non-significant. I knew at this point I could keep
+going back and forth, or I could alter my request.</p>
+</div>
+<div id="creating-loops-to-find-the-dataset" class="section level2">
+<h2>Creating loops to find the dataset</h2>
+<p>At this point, I told chat I needed for sugar to be
+non-significant.</p>
+<div
+id="i-want-you-to-randomize-values-to-ensure-sugar-is-non-significant.-this-should-not-be-at-the-expense-of-a-significant-main-effect-of-caffeine-presence-of-caffeine-decreases-distance-and-a-significant-interaction-the-combination-of-caffeine-and-sugar-further-decreases-distance"
+class="section level4">
+<h4>I want you to randomize values to ensure sugar is non-significant.
+This should not be at the expense of a significant main effect of
+caffeine (presence of caffeine decreases distance) and a significant
+interaction (the combination of caffeine and sugar further decreases
+distance)</h4>
+<p>This way, it would ensure:</p>
+<p>✅ Caffeine has a significant main effect (decreases distance)</p>
+<p>✅ There’s a significant interaction (caffeine + sugar decreases the
+most)</p>
+<p>❌ Sugar is not significant, but still shows a consistent small
+decrease</p>
+<p>Chat GPT told me that it would “solve this by simulating repeatedly
+until the ANOVA gives the pattern of significance you’re looking for.
+Here’s the updated R chunk that automatically resamples until it finds a
+dataset that matches your criteria”</p>
+<p>I never thought about creating a loop, repeatedly sampling until I
+got what I needed. Here is what chat provided.</p>
+<pre class="r"><code>set.seed(123)
+library(tidyverse)
+library(ggplot2)
+library(emmeans)
+
+n_per_cell &lt;- 30
+max_tries &lt;- 1000
+
+# Fixed condition means (subtle sugar effect)
+means &lt;- tibble(
+  sugar = rep(c(&quot;No&quot;, &quot;Yes&quot;), each = 2),
+  caffeine = rep(c(&quot;No&quot;, &quot;Yes&quot;), times = 2),
+  mean_distance = c(50, 45, 49, 43.5),  # No/No, No/Yes, Yes/No, Yes/Yes
+  sd = 5
+)
+
+success &lt;- FALSE
+attempt &lt;- 1
+
+while (!success &amp;&amp; attempt &lt;= max_tries) {
+  sim_data &lt;- means %&gt;%
+    rowwise() %&gt;%
+    mutate(
+      distance = list(rnorm(n_per_cell, mean = mean_distance, sd = sd)),
+      participant = list(1:n_per_cell)
+    ) %&gt;%
+    unnest(c(distance, participant)) %&gt;%
+    mutate(
+      sugar = factor(sugar, levels = c(&quot;No&quot;, &quot;Yes&quot;)),
+      caffeine = factor(caffeine, levels = c(&quot;No&quot;, &quot;Yes&quot;))
+    )
+
+  model &lt;- aov(distance ~ sugar * caffeine, data = sim_data)
+  results &lt;- summary(model)[[1]]
+
+  p_sugar &lt;- results[&quot;sugar&quot;, &quot;Pr(&gt;F)&quot;]
+  p_caffeine &lt;- results[&quot;caffeine&quot;, &quot;Pr(&gt;F)&quot;]
+  p_interaction &lt;- results[&quot;sugar:caffeine&quot;, &quot;Pr(&gt;F)&quot;]
+
+  if (p_sugar &gt; 0.05 &amp;&amp; p_caffeine &lt; 0.05 &amp;&amp; p_interaction &lt; 0.05) {
+    success &lt;- TRUE
+    cat(&quot;Success on attempt&quot;, attempt, &quot;\n&quot;)
+  } else {
+    attempt &lt;- attempt + 1
+  }
+}
+
+if (!success) stop(&quot;Couldn&#39;t find suitable data after&quot;, max_tries, &quot;tries.&quot;)
+
+# Show ANOVA table
+summary(model)
+
+# Plot the interaction
+ggplot(sim_data, aes(x = caffeine, y = distance, fill = sugar)) +
+  stat_summary(fun = mean, geom = &quot;bar&quot;, position = position_dodge(.9)) +
+  stat_summary(fun.data = mean_se, geom = &quot;errorbar&quot;, width = .2,
+               position = position_dodge(.9)) +
+  labs(title = &quot;Interaction of Sugar and Caffeine on Distance&quot;,
+       y = &quot;Distance&quot;, x = &quot;Caffeine&quot;) +
+  theme_minimal()</code></pre>
+<p>Here, it still defined group means. What changed was that it placed
+the rnrom and dataset generation into a while() loop, providing if
+statements to continue creating samples and testing the ANOVA until it
+found the correct p values.</p>
+<p>This code broke down, as there were conditions in which the
+simulation leads to degenerate data (e.g., zero variance in a
+condition).</p>
+<p>ChatGPT added a check to make sure the ANOVA table includes all
+expected rows before trying to pull p-values, and skipped iterations if
+something weird happens.</p>
+<pre class="r"><code>set.seed(123)
+library(tidyverse)
+library(ggplot2)
+library(emmeans)
+
+n_per_cell &lt;- 30
+max_tries &lt;- 1000
+
+# Target means (small sugar effect)
+means &lt;- tibble(
+  sugar = rep(c(&quot;No&quot;, &quot;Yes&quot;), each = 2),
+  caffeine = rep(c(&quot;No&quot;, &quot;Yes&quot;), times = 2),
+  mean_distance = c(50, 45, 49, 43.5),
+  sd = 5
+)
+
+success &lt;- FALSE
+attempt &lt;- 1
+
+while (!success &amp;&amp; attempt &lt;= max_tries) {
+  sim_data &lt;- means %&gt;%
+    rowwise() %&gt;%
+    mutate(
+      distance = list(rnorm(n_per_cell, mean = mean_distance, sd = sd)),
+      participant = list(1:n_per_cell)
+    ) %&gt;%
+    unnest(c(distance, participant)) %&gt;%
+    mutate(
+      sugar = factor(sugar, levels = c(&quot;No&quot;, &quot;Yes&quot;)),
+      caffeine = factor(caffeine, levels = c(&quot;No&quot;, &quot;Yes&quot;))
+    )
+
+  model &lt;- tryCatch(
+    aov(distance ~ sugar * caffeine, data = sim_data),
+    error = function(e) NULL
+  )
+
+  if (!is.null(model)) {
+    results &lt;- summary(model)[[1]]
+    if (all(c(&quot;sugar&quot;, &quot;caffeine&quot;, &quot;sugar:caffeine&quot;) %in% rownames(results))) {
+      p_sugar &lt;- results[&quot;sugar&quot;, &quot;Pr(&gt;F)&quot;]
+      p_caffeine &lt;- results[&quot;caffeine&quot;, &quot;Pr(&gt;F)&quot;]
+      p_interaction &lt;- results[&quot;sugar:caffeine&quot;, &quot;Pr(&gt;F)&quot;]
+
+      if (!any(is.na(c(p_sugar, p_caffeine, p_interaction))) &amp;&amp;
+          p_sugar &gt; 0.05 &amp;&amp; p_caffeine &lt; 0.05 &amp;&amp; p_interaction &lt; 0.05) {
+        success &lt;- TRUE
+        cat(&quot;✅ Success on attempt&quot;, attempt, &quot;\n&quot;)
+      }
+    }
+  }
+
+  attempt &lt;- attempt + 1
+}
+
+if (!success) stop(&quot;❌ Couldn&#39;t find suitable data after &quot;, max_tries, &quot; tries.&quot;)
+
+# Show ANOVA results
+summary(model)
+
+# Plot interaction
+ggplot(sim_data, aes(x = caffeine, y = distance, fill = sugar)) +
+  stat_summary(fun = mean, geom = &quot;bar&quot;, position = position_dodge(.9)) +
+  stat_summary(fun.data = mean_se, geom = &quot;errorbar&quot;, width = .2,
+               position = position_dodge(.9)) +
+  labs(title = &quot;Interaction of Sugar and Caffeine on Distance&quot;,
+       y = &quot;Distance&quot;, x = &quot;Caffeine&quot;) +
+  theme_minimal()</code></pre>
+<p>It used tryCatch() to identify errors and warnings in the ANOVA.
+Interesting things I’ve noted is that they use an exclamation point to
+indicate if criteria isn’t met. They also use nested if() statements to
+meet multiple conditions.</p>
+<p>After the code didn’t produce results at 1,000 attempts, I decided to
+increase the attempts to 10,000 (spoiler, it also didn’t provide
+results).</p>
+</div>
+</div>
+<div id="changes-after-10000-attempts" class="section level2">
+<h2>Changes after 10,000 attempts</h2>
+<p>I asked chatGPT if this was even possible. It suggested there might
+be unnecessary constraints, and suggested it could provide a version of
+the code that logs which p-values were failing each time, so you can see
+what’s going wrong and adjust precisely.</p>
+<pre class="r"><code>set.seed(123)
+library(tidyverse)
+library(ggplot2)
+library(emmeans)
+
+n_per_cell &lt;- 30
+max_tries &lt;- 10000
+
+# Adjusted means (tiny sugar effect), more noise
+means &lt;- tibble(
+  sugar = rep(c(&quot;No&quot;, &quot;Yes&quot;), each = 2),
+  caffeine = rep(c(&quot;No&quot;, &quot;Yes&quot;), times = 2),
+  mean_distance = c(50, 45, 49.5, 43.5),  # small sugar effect
+  sd = 6
+)
+
+success &lt;- FALSE
+attempt &lt;- 1
+
+while (!success &amp;&amp; attempt &lt;= max_tries) {
+  sim_data &lt;- means %&gt;%
+    rowwise() %&gt;%
+    mutate(
+      distance = list(rnorm(n_per_cell, mean = mean_distance, sd = sd)),
+      participant = list(1:n_per_cell)
+    ) %&gt;%
+    unnest(c(distance, participant)) %&gt;%
+    mutate(
+      sugar = factor(sugar, levels = c(&quot;No&quot;, &quot;Yes&quot;)),
+      caffeine = factor(caffeine, levels = c(&quot;No&quot;, &quot;Yes&quot;))
+    )
+
+  model &lt;- tryCatch(
+    aov(distance ~ sugar * caffeine, data = sim_data),
+    error = function(e) NULL
+  )
+
+  if (!is.null(model)) {
+    results &lt;- summary(model)[[1]]
+    if (all(c(&quot;sugar&quot;, &quot;caffeine&quot;, &quot;sugar:caffeine&quot;) %in% rownames(results))) {
+      p_sugar &lt;- results[&quot;sugar&quot;, &quot;Pr(&gt;F)&quot;]
+      p_caffeine &lt;- results[&quot;caffeine&quot;, &quot;Pr(&gt;F)&quot;]
+      p_interaction &lt;- results[&quot;sugar:caffeine&quot;, &quot;Pr(&gt;F)&quot;]
+
+      if (!any(is.na(c(p_sugar, p_caffeine, p_interaction)))) {
+        if (p_sugar &gt; 0.05 &amp;&amp; p_caffeine &lt; 0.05 &amp;&amp; p_interaction &lt; 0.05) {
+          success &lt;- TRUE
+          cat(&quot;✅ Success on attempt&quot;, attempt, &quot;\n&quot;)
+        } else {
+          if (attempt %% 100 == 0) {
+            cat(&quot;Attempt&quot;, attempt, &quot;failed:\n&quot;)
+            cat(&quot;  p_sugar      =&quot;, round(p_sugar, 4), &quot;\n&quot;)
+            cat(&quot;  p_caffeine   =&quot;, round(p_caffeine, 4), &quot;\n&quot;)
+            cat(&quot;  p_interaction=&quot;, round(p_interaction, 4), &quot;\n&quot;)
+          }
+        }
+      }
+    }
+  }
+
+  attempt &lt;- attempt + 1
+}
+
+if (!success) stop(&quot;❌ Couldn&#39;t find suitable data after &quot;, max_tries, &quot; tries.&quot;)
+
+# Show final model summary
+summary(model)
+
+# Plot
+ggplot(sim_data, aes(x = caffeine, y = distance, fill = sugar)) +
+  stat_summary(fun = mean, geom = &quot;bar&quot;, position = position_dodge(.9)) +
+  stat_summary(fun.data = mean_se, geom = &quot;errorbar&quot;, width = .2,
+               position = position_dodge(.9)) +
+  labs(title = &quot;Interaction of Sugar and Caffeine on Distance&quot;,
+       y = &quot;Distance&quot;, x = &quot;Caffeine&quot;) +
+  theme_minimal()</code></pre>
+<p>Spoiler alert, this didn’t find a suitble value. But more
+importantly, it also didn’t give me the p values as suggested. I asked
+if the code assumes I’ll find a suitable dataset. Here was ChatGPT’s
+response:</p>
+<div
+id="ah-great-point-and-youre-totally-right-again.-the-current-code-only-logs-every-100th-attempt-if-the-anova-ran-and-returned-usable-p-values-but-it-doesnt-track-the-closest-ones-overall-nor-does-it-show-what-the-best-i.e.-closest-to-criteria-dataset-was-when-it-fails-after-all-tries."
+class="section level4">
+<h4>Ah, great point — and you’re totally right again. The current code
+only logs every 100th attempt if the ANOVA ran and returned usable
+p-values, but it doesn’t track the closest ones overall, nor does it
+show what the best (i.e. closest-to-criteria) dataset was when it fails
+after all tries.</h4>
+<p>After fixing errors in the code it provided me, chat reccommended two
+changes.</p>
+<ol style="list-style-type: decimal">
+<li>Increase <code>sd</code> from 6 → 7 or 8 to increase variability
+<br/></li>
+<li>Increase <code>n_per_cell</code> from 30 → 40 or 50 for more
+statistical stability</li>
+</ol>
+<p>This way, it would hopefully have more wiggle room with participants.
+Something I noticed when scanning through the code is that they set the
+seed. I asked if chat needed to set the seed, or could it randomize the
+seed to help maximize the probability for success. It suggested I
+randomly sample the seeds, and implemented the following changes
+below:</p>
+<pre class="r"><code># Only set the seed once every N tries, or log successful seeds:
+random_seed &lt;- sample(1:1e6, 1)
+set.seed(random_seed)
+cat(&quot;Using seed:&quot;, random_seed, &quot;\n&quot;)</code></pre>
+<pre class="r"><code>library(tidyverse)
+library(ggplot2)
+library(emmeans)
+
+n_per_cell &lt;- 50
+max_tries &lt;- 10000
+sd_val &lt;- 8
+
+means &lt;- tibble(
+  sugar = rep(c(&quot;No&quot;, &quot;Yes&quot;), each = 2),
+  caffeine = rep(c(&quot;No&quot;, &quot;Yes&quot;), times = 2),
+  mean_distance = c(50, 45, 49.5, 43.5),  # Sugar effect is small
+  sd = sd_val
+)
+
+success &lt;- FALSE
+attempt &lt;- 1
+
+best_fit &lt;- list(
+  p_sugar = NA,
+  p_caffeine = NA,
+  p_interaction = NA,
+  distance = Inf,
+  model = NULL,
+  data = NULL,
+  seed = NA
+)
+
+score_fit &lt;- function(p_sugar, p_caff, p_int) {
+  score &lt;- 0
+  if (!is.na(p_sugar)) score &lt;- score + abs(p_sugar - 0.5)
+  if (!is.na(p_caff))  score &lt;- score + abs(p_caff - 0.01)
+  if (!is.na(p_int))   score &lt;- score + abs(p_int - 0.01)
+  return(score)
+}
+
+while (!success &amp;&amp; attempt &lt;= max_tries) {
+  current_seed &lt;- sample(1:1e6, 1)
+  set.seed(current_seed)
+
+  sim_data &lt;- means %&gt;%
+    rowwise() %&gt;%
+    mutate(
+      distance = list(rnorm(n_per_cell, mean = mean_distance, sd = sd)),
+      participant = list(1:n_per_cell)
+    ) %&gt;%
+    unnest(c(distance, participant)) %&gt;%
+    mutate(
+      sugar = factor(sugar, levels = c(&quot;No&quot;, &quot;Yes&quot;)),
+      caffeine = factor(caffeine, levels = c(&quot;No&quot;, &quot;Yes&quot;))
+    )
+
+  model &lt;- tryCatch(
+    aov(distance ~ sugar * caffeine, data = sim_data),
+    error = function(e) NULL
+  )
+
+  if (!is.null(model)) {
+    results &lt;- summary(model)[[1]]
+    if (all(c(&quot;sugar&quot;, &quot;caffeine&quot;, &quot;sugar:caffeine&quot;) %in% rownames(results))) {
+      p_sugar &lt;- results[&quot;sugar&quot;, &quot;Pr(&gt;F)&quot;]
+      p_caffeine &lt;- results[&quot;caffeine&quot;, &quot;Pr(&gt;F)&quot;]
+      p_interaction &lt;- results[&quot;sugar:caffeine&quot;, &quot;Pr(&gt;F)&quot;]
+
+      if (!any(is.na(c(p_sugar, p_caffeine, p_interaction)))) {
+        this_score &lt;- score_fit(p_sugar, p_caffeine, p_interaction)
+        if (this_score &lt; best_fit$distance) {
+          best_fit &lt;- list(
+            p_sugar = p_sugar,
+            p_caffeine = p_caffeine,
+            p_interaction = p_interaction,
+            distance = this_score,
+            model = model,
+            data = sim_data,
+            seed = current_seed
+          )
+        }
+
+        if (p_sugar &gt; 0.05 &amp;&amp; p_caffeine &lt; 0.05 &amp;&amp; p_interaction &lt; 0.05) {
+          success &lt;- TRUE
+          cat(&quot;🎯 Successful attempt using seed:&quot;, current_seed, &quot;\n&quot;)
+        }
+      }
+
+      if (attempt %% 100 == 0) {
+        cat(&quot;Attempt&quot;, attempt, 
+            &quot;| p_sugar:&quot;, round(p_sugar, 4),
+            &quot;| p_caff:&quot;, round(p_caffeine, 4),
+            &quot;| p_int:&quot;, round(p_interaction, 4), &quot;\n&quot;)
+      }
+    }
+  }
+
+  attempt &lt;- attempt + 1
+}
+
+if (!success) {
+  cat(&quot;❌ No perfect fit found after&quot;, max_tries, &quot;tries.\n&quot;)
+  if (is.null(best_fit$model) || is.null(best_fit$data)) {
+    cat(&quot;⚠️ Could not generate even one usable dataset with valid ANOVA output.\n&quot;)
+  } else {
+    cat(&quot;Closest match (not meeting full criteria):\n&quot;)
+    cat(&quot;  Seed         =&quot;, best_fit$seed, &quot;\n&quot;)
+    cat(&quot;  p_sugar      =&quot;, round(best_fit$p_sugar, 4), &quot;\n&quot;)
+    cat(&quot;  p_caffeine   =&quot;, round(best_fit$p_caffeine, 4), &quot;\n&quot;)
+    cat(&quot;  p_interaction=&quot;, round(best_fit$p_interaction, 4), &quot;\n&quot;)
+    model &lt;- best_fit$model
+    sim_data &lt;- best_fit$data
+
+    print(summary(model))
+    ggplot(sim_data, aes(x = caffeine, y = distance, fill = sugar)) +
+      stat_summary(fun = mean, geom = &quot;bar&quot;, position = position_dodge(.9)) +
+      stat_summary(fun.data = mean_se, geom = &quot;errorbar&quot;, width = .2,
+                   position = position_dodge(.9)) +
+      labs(title = paste(&quot;Best Attempt (Seed:&quot;, best_fit$seed, &quot;)&quot;),
+           y = &quot;Distance&quot;, x = &quot;Caffeine&quot;) +
+      theme_minimal()
+  }
+} else {
+  # If success, show and plot
+  cat(&quot;✅ You can reproduce this dataset using: set.seed(&quot;, best_fit$seed, &quot;)\n&quot;)
+  print(summary(best_fit$model))
+  ggplot(best_fit$data, aes(x = caffeine, y = distance, fill = sugar)) +
+    stat_summary(fun = mean, geom = &quot;bar&quot;, position = position_dodge(.9)) +
+    stat_summary(fun.data = mean_se, geom = &quot;errorbar&quot;, width = .2,
+                 position = position_dodge(.9)) +
+    labs(title = paste(&quot;Successful Simulation (Seed:&quot;, best_fit$seed, &quot;)&quot;),
+         y = &quot;Distance&quot;, x = &quot;Caffeine&quot;) +
+    theme_minimal()
+}</code></pre>
+<p>After all this, I wondered how much chatGPT was changing the means? I
+was thinking that allowing the means to fluctuate between 100 and 500
+could make a small (yet hopefully impactful) difference.</p>
+<p>Here was the final variation it provided me:</p>
+<pre class="r"><code>library(tidyverse)
+library(ggplot2)
+library(emmeans)
+
+n_per_cell &lt;- 50
+max_tries &lt;- 10000
+sd_val &lt;- 15  # You can increase this if needed for more realism
+
+success &lt;- FALSE
+attempt &lt;- 1
+
+best_fit &lt;- list(
+  p_sugar = NA,
+  p_caffeine = NA,
+  p_interaction = NA,
+  distance = Inf,
+  model = NULL,
+  data = NULL,
+  seed = NA
+)
+
+score_fit &lt;- function(p_sugar, p_caff, p_int) {
+  score &lt;- 0
+  if (!is.na(p_sugar)) score &lt;- score + abs(p_sugar - 0.5)
+  if (!is.na(p_caff))  score &lt;- score + abs(p_caff - 0.01)
+  if (!is.na(p_int))   score &lt;- score + abs(p_int - 0.01)
+  return(score)
+}
+
+while (!success &amp;&amp; attempt &lt;= max_tries) {
+  current_seed &lt;- sample(1:1e6, 1)
+  set.seed(current_seed)
+
+  # Generate fluctuating means between 100 and 500
+  base &lt;- runif(1, 300, 500)
+
+  mean_distance &lt;- c(
+    base,                          # No sugar, No caffeine
+    base - 20,                     # No sugar, Yes caffeine
+    base - runif(1, 0, 3),         # Yes sugar, No caffeine (small drop)
+    base - 20 - runif(1, 5, 10)    # Yes sugar, Yes caffeine (interaction)
+  )
+
+  means &lt;- tibble(
+    sugar = rep(c(&quot;No&quot;, &quot;Yes&quot;), each = 2),
+    caffeine = rep(c(&quot;No&quot;, &quot;Yes&quot;), times = 2),
+    mean_distance = mean_distance,
+    sd = sd_val
+  )
+
+  sim_data &lt;- means %&gt;%
+    rowwise() %&gt;%
+    mutate(
+      distance = list(rnorm(n_per_cell, mean = mean_distance, sd = sd)),
+      participant = list(1:n_per_cell)
+    ) %&gt;%
+    unnest(c(distance, participant)) %&gt;%
+    mutate(
+      sugar = factor(sugar, levels = c(&quot;No&quot;, &quot;Yes&quot;)),
+      caffeine = factor(caffeine, levels = c(&quot;No&quot;, &quot;Yes&quot;))
+    )
+
+  model &lt;- tryCatch(
+    aov(distance ~ sugar * caffeine, data = sim_data),
+    error = function(e) NULL
+  )
+
+  if (!is.null(model)) {
+    results &lt;- summary(model)[[1]]
+    if (all(c(&quot;sugar&quot;, &quot;caffeine&quot;, &quot;sugar:caffeine&quot;) %in% rownames(results))) {
+      p_sugar &lt;- results[&quot;sugar&quot;, &quot;Pr(&gt;F)&quot;]
+      p_caffeine &lt;- results[&quot;caffeine&quot;, &quot;Pr(&gt;F)&quot;]
+      p_interaction &lt;- results[&quot;sugar:caffeine&quot;, &quot;Pr(&gt;F)&quot;]
+
+      if (!any(is.na(c(p_sugar, p_caffeine, p_interaction)))) {
+        this_score &lt;- score_fit(p_sugar, p_caffeine, p_interaction)
+        if (this_score &lt; best_fit$distance) {
+          best_fit &lt;- list(
+            p_sugar = p_sugar,
+            p_caffeine = p_caffeine,
+            p_interaction = p_interaction,
+            distance = this_score,
+            model = model,
+            data = sim_data,
+            seed = current_seed
+          )
+        }
+
+        if (p_sugar &gt; 0.05 &amp;&amp; p_caffeine &lt; 0.05 &amp;&amp; p_interaction &lt; 0.05) {
+          success &lt;- TRUE
+          cat(&quot;🎯 Successful attempt using seed:&quot;, current_seed, &quot;\n&quot;)
+        }
+      }
+
+      if (attempt %% 100 == 0) {
+        cat(&quot;Attempt&quot;, attempt, 
+            &quot;| p_sugar:&quot;, round(p_sugar, 4),
+            &quot;| p_caff:&quot;, round(p_caffeine, 4),
+            &quot;| p_int:&quot;, round(p_interaction, 4), &quot;\n&quot;)
+      }
+    }
+  }
+
+  attempt &lt;- attempt + 1
+}
+
+if (!success) {
+  cat(&quot;❌ No perfect fit found after&quot;, max_tries, &quot;tries.\n&quot;)
+  if (is.null(best_fit$model) || is.null(best_fit$data)) {
+    cat(&quot;⚠️ Could not generate even one usable dataset with valid ANOVA output.\n&quot;)
+  } else {
+    cat(&quot;Closest match (not meeting full criteria):\n&quot;)
+    cat(&quot;  Seed         =&quot;, best_fit$seed, &quot;\n&quot;)
+    cat(&quot;  p_sugar      =&quot;, round(best_fit$p_sugar, 4), &quot;\n&quot;)
+    cat(&quot;  p_caffeine   =&quot;, round(best_fit$p_caffeine, 4), &quot;\n&quot;)
+    cat(&quot;  p_interaction=&quot;, round(best_fit$p_interaction, 4), &quot;\n&quot;)
+    model &lt;- best_fit$model
+    sim_data &lt;- best_fit$data
+
+    print(summary(model))
+    ggplot(sim_data, aes(x = caffeine, y = distance, fill = sugar)) +
+      stat_summary(fun = mean, geom = &quot;bar&quot;, position = position_dodge(.9)) +
+      stat_summary(fun.data = mean_se, geom = &quot;errorbar&quot;, width = .2,
+                   position = position_dodge(.9)) +
+      labs(title = paste(&quot;Best Attempt (Seed:&quot;, best_fit$seed, &quot;)&quot;),
+           y = &quot;Distance&quot;, x = &quot;Caffeine&quot;) +
+      theme_minimal()
+  }
+} else {
+  cat(&quot;✅ You can reproduce this dataset using: set.seed(&quot;, best_fit$seed, &quot;)\n&quot;)
+  print(summary(best_fit$model))
+  ggplot(best_fit$data, aes(x = caffeine, y = distance, fill = sugar)) +
+    stat_summary(fun = mean, geom = &quot;bar&quot;, position = position_dodge(.9)) +
+    stat_summary(fun.data = mean_se, geom = &quot;errorbar&quot;, width = .2,
+                 position = position_dodge(.9)) +
+    labs(title = paste(&quot;Successful Simulation (Seed:&quot;, best_fit$seed, &quot;)&quot;),
+         y = &quot;Distance&quot;, x = &quot;Caffeine&quot;) +
+    theme_minimal()
+}</code></pre>
+<p>At this point, I figure either the code was faulty, or this was
+simply an impossible task. I let chatGPT rest.</p>
+</div>
+</div>
 
 
 

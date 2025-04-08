@@ -9,9 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Benjamin Egan" />
 
 
-<title>Portfolio 8</title>
+<title>Creating Data</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -290,18 +291,185 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 8</h1>
+<h1 class="title toc-ignore">Creating Data</h1>
+<h4 class="author">Benjamin Egan</h4>
 
 </div>
 
 
-<blockquote>
-<p>The projects should be numbered consecutively (i.e., in the order in
-which you began them), and should include for each project a description
-of the goal, the product (computer program, hand graph, computer graph,
-etc.), the data, and some interpretation. Reports must be reproducible
-and of high quality in terms of writing, grammar, presentation, etc.</p>
-</blockquote>
+<div id="created-4325" class="section level4">
+<h4>Created 4/3/25</h4>
+</div>
+<div id="objective" class="section level2">
+<h2>Objective</h2>
+<p>As I mentioned in piece 3, I serve as a teaching assistant for the
+undergraduate Research Methods in psychology course at Wake Forest
+University. They are required to write a final paper, for which they
+need to write up and analyze a 2x2 experiment. As a TA, I have to create
+the data for the experiment. Since it’s a 2x2 between subjects with at
+least 100 participants, this would be incredibly difficult. Luckily I
+walked through module 13 on simulating data, and should be able to
+create the data.</p>
+<p>The basic function I’ll need to use is rnorm(). This will let me
+randomly generate a sample of a normal distribution. I’m starting and
+making sure I can actually generate the data.</p>
+<pre class="r"><code>set.seed(123)
+
+base_rnorm &lt;- rnorm(100, mean = 50, sd = 5)
+
+first_attempt &lt;- data.frame(id = 1:100, base_rnorm)
+
+                                      
+data.frame(first_attempt) %&gt;%
+ggplot(
+ aes(x=base_rnorm)
+)+
+  theme_bw()+
+  geom_histogram(binwidth=2,color=&quot;black&quot;, fill=&quot;blue&quot;) +
+  labs(
+    title = &quot;Look, I can create data!&quot;,
+    x = NULL, 
+    y = NULL
+    )</code></pre>
+<p><img src="p08_files/figure-html/base%20rnorm-1.png" width="672" /></p>
+<p>My plan is to create four different samples, one for each group. I
+then will join them to create a large dataset. This way I can control
+the main effects and interactions.</p>
+<p>The experiment calls for two variables, Sugar (sugar/no sugar) and
+Caffeine (caffeine/no caffeine), and the DV is reported distance to an
+object.</p>
+<p>I also included gender and age for students to be able to use in
+their participants sections.</p>
+</div>
+<div id="creating-the-groups" class="section level2">
+<h2>Creating the groups</h2>
+<div id="sugar-and-caffeine" class="section level3">
+<h3>Sugar and caffeine</h3>
+<pre class="r"><code>set.seed(101)
+
+Distance &lt;- rnorm(30, mean = 235, sd = 23.03)
+
+Gender &lt;- c(&quot;Male&quot;,&quot;Female&quot;)
+Gender &lt;- sample(Gender, 30, replace=TRUE, prob=c(0.5, 0.5))
+
+Age &lt;- rnorm(30, mean = 19, sd = .5)
+
+group1 &lt;- data.frame(id = 1:30, Gender, round(Age,0), Sugar = 1, Caffeine = 1, round(Distance,0))</code></pre>
+<p>Using round() allowed me to make distance a whole number</p>
+</div>
+<div id="no-sugar-and-no-caffeine" class="section level3">
+<h3>No Sugar and no caffeine</h3>
+<pre class="r"><code>set.seed(102)
+
+Distance &lt;- rnorm(30, mean = 275, sd = 20.1)
+
+Gender &lt;- c(&quot;Male&quot;,&quot;Female&quot;)
+Gender &lt;- sample(Gender, 30, replace=TRUE, prob=c(0.5, 0.5))
+
+Age &lt;- rnorm(30, mean = 19, sd = .5)
+
+group2 &lt;- data.frame(id = 31:60, Gender, round(Age,0), Sugar = 0, Caffeine = 0, round(Distance,0))</code></pre>
+</div>
+<div id="sugar-and-no-caffeine" class="section level3">
+<h3>Sugar and no caffeine</h3>
+<pre class="r"><code>set.seed(103)
+
+Distance &lt;- rnorm(30, mean = 282, sd = 21.3)
+
+Gender &lt;- c(&quot;Male&quot;,&quot;Female&quot;)
+Gender &lt;- sample(Gender, 30, replace=TRUE, prob=c(0.5, 0.5))
+
+Age &lt;- rnorm(30, mean = 19, sd = .5)
+
+group3 &lt;- data.frame(id = 61:90, Gender, round(Age,0), Sugar = 1, Caffeine = 0, round(Distance,0))</code></pre>
+</div>
+<div id="no-sugar-and-caffeine" class="section level3">
+<h3>No sugar and caffeine</h3>
+<pre class="r"><code>set.seed(104)
+
+Distance &lt;- rnorm(30, mean = 250, sd = 23.05)
+
+Gender &lt;- c(&quot;Male&quot;,&quot;Female&quot;)
+Gender &lt;- sample(Gender, 30, replace=TRUE, prob=c(0.5, 0.5))
+
+Age &lt;- rnorm(30, mean = 19, sd = .5)
+
+group4 &lt;- data.frame(id = 91:120, Gender, round(Age,0), Sugar = 0, Caffeine = 1, round(Distance,0))</code></pre>
+</div>
+</div>
+<div id="joining-the-groups" class="section level2">
+<h2>Joining the groups</h2>
+<p>Here I join the datasets together. I only know how to join two
+datasets at once, so I decided to join the all/none together. I also
+renamed the distance and age variables, and saved the dataset.</p>
+<pre class="r"><code>group1and2 &lt;- group1 %&gt;% full_join(group2)</code></pre>
+<pre><code>## Joining with `by = join_by(id, Gender, round.Age..0., Sugar,
+## Caffeine, round.Distance..0.)`</code></pre>
+<pre class="r"><code>group3and4 &lt;- group3 %&gt;% full_join(group4)</code></pre>
+<pre><code>## Joining with `by = join_by(id, Gender, round.Age..0., Sugar,
+## Caffeine, round.Distance..0.)`</code></pre>
+<pre class="r"><code>lab_12_data &lt;- group1and2 %&gt;% full_join(group3and4)</code></pre>
+<pre><code>## Joining with `by = join_by(id, Gender, round.Age..0., Sugar,
+## Caffeine, round.Distance..0.)`</code></pre>
+<pre class="r"><code>lab_12_data &lt;- lab_12_data %&gt;% 
+  rename(Distance = round.Distance..0.)
+
+lab_12_data &lt;- lab_12_data %&gt;% 
+  rename(Age = round.Age..0.)
+
+write_sav(lab_12_data, &quot;class_data_official.sav&quot;)
+
+Test_data &lt;- read_sav(&quot;class_data_official.sav&quot;)</code></pre>
+<p>lab_12_data is a data frame that includes an ID number, if they had
+sugar or caffeine, and a distance score.</p>
+</div>
+<div id="testing-my-dataset" class="section level2">
+<h2>Testing my dataset</h2>
+<p>I want to make sure there is a main effect of caffeine, no main
+effect of sugar, and an interaction that suggests the influence of both
+caffeine and sugar highly reduces perceived distance. Here, I ran a
+factorial ANOVA on the data and plotted the means</p>
+<pre class="r"><code>Visual &lt;- Test_data %&gt;%
+  mutate(Sugar = case_when(
+    Sugar == 0 ~ &quot;No Sugar&quot;,
+    Sugar == 1 ~ &quot;Sugar&quot;
+  ))
+
+Visual &lt;- Visual %&gt;%
+  mutate(Caffeine = case_when(
+    Caffeine == 0 ~ &quot;No Caffeine&quot;,
+    Caffeine == 1 ~ &quot;Caffeine&quot;
+  ))
+
+
+aov(Distance ~ Sugar * Caffeine, Visual) %&gt;%
+summary()</code></pre>
+<pre><code>##                 Df Sum Sq Mean Sq F value Pr(&gt;F)    
+## Sugar            1   1274    1274   3.148 0.0786 .  
+## Caffeine         1  47960   47960 118.514 &lt;2e-16 ***
+## Sugar:Caffeine   1   2075    2075   5.128 0.0254 *  
+## Residuals      116  46943     405                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>Visual %&gt;%
+  ggplot(aes(
+    x = Sugar,
+    y = Distance,
+    group = Caffeine,
+    color = Caffeine
+  ))+
+  geom_line()+
+  theme_bw()+
+  labs(
+    x = &quot;Sugar?&quot;,
+    y = &quot;Perceived Distance&quot;,
+    color = &quot;Caffeine?&quot;,
+    title = &quot;Visual for Caffeine x Sugar data&quot;
+  )</code></pre>
+<p><img src="p08_files/figure-html/anova%20to%20test-1.png" width="672" /></p>
+<p>Based on the ANOVA and the graph, it looks like I accomplished my
+goal.</p>
+</div>
 
 
 
