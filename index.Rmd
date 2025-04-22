@@ -27,5 +27,5 @@ This website hosts my [portfolio](https://datascience4psych.github.io/DataScienc
 
 #### [Piece 9: ChatGPT - Is It Helpful?](p09.html)
 
-#### [Piece 10: ~ Under Construction ~](p10.html)
+#### [Piece 10: Evaluation and tips for Lab 12](p10.html)
 

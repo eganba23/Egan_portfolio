@@ -9,9 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Benjamin Egan" />
 
 
-<title>Portfolio 5</title>
+<title>Tinkering Around Tidy Tuesday Pt. 2</title>
 
 <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -291,13 +292,74 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Portfolio 5</h1>
+<h1 class="title toc-ignore">Tinkering Around Tidy Tuesday Pt. 2</h1>
+<h4 class="author">Benjamin Egan</h4>
 
 </div>
 
 
-<p><em>Work in Progress</em></p>
-<p><img src="Construction.png" /></p>
+<div id="created-4212025" class="section level4">
+<h4>Created 4/21/2025</h4>
+</div>
+<div id="tidy-tuesday---4202025" class="section level1">
+<h1>Tidy Tuesday - 4/20/2025</h1>
+<p>The Tidy Tuesday for this week explored fatal crashes on 4/20, the
+“marijuana holiday.” Through the data I’m going to attempt to show that
+there is actually no link between crashes and inhibition due to
+marijuana. This should be similar to lab 7’s visualization of bad data
+lab.</p>
+<pre class="r"><code>tuesdata &lt;- tidytuesdayR::tt_load(2025, week = 16)</code></pre>
+<pre><code>## ---- Compiling #TidyTuesday Information for 2025-04-22 ----
+## --- There are 2 files available ---
+## 
+## 
+## ── Downloading files ───────────────────────────────────────────────────────────
+## 
+##   1 of 2: &quot;daily_accidents.csv&quot;
+##   2 of 2: &quot;daily_accidents_420.csv&quot;</code></pre>
+<pre class="r"><code>daily_accidents &lt;- tuesdata$daily_accidents
+daily_accidents_420 &lt;- tuesdata$daily_accidents_420
+
+view(daily_accidents_420)</code></pre>
+<div id="their-questions" class="section level3">
+<h3>Their Questions</h3>
+<ol style="list-style-type: decimal">
+<li>Can you detect any correlations between fatal car crashes and
+particular days of the year? <br/></li>
+<li>What are the most dangerous days of the year for fatal car crashes
+in the United States? <br/></li>
+<li>What other factors might help analyze the data in more detail? You
+can use the cleaning script to download the full dataset.</li>
+</ol>
+</div>
+<div
+id="correlation-between-fatal-car-crashes-and-particular-days-of-the-year"
+class="section level3">
+<h3>1. Correlation between fatal car crashes and particular days of the
+year</h3>
+<p>To see if there is a correlation, I’ll use the daily_accidents
+dataset. My first step is to break out the date into separate day,
+month, and year variables.</p>
+<pre class="r"><code>daily_accidents &lt;- data.frame(date = daily_accidents$date,
+                 year = as.numeric(format(daily_accidents$date, format = &quot;%Y&quot;)),
+                 month = as.numeric(format(daily_accidents$date, format = &quot;%m&quot;)),
+                 day = as.numeric(format(daily_accidents$date, format = &quot;%d&quot;)),
+                 daily_accidents$fatalities_count)
+
+names(daily_accidents)[names(daily_accidents) == &quot;daily_accidents.fatalities_count&quot;] &lt;- &quot;fatalities&quot;
+
+head(daily_accidents)</code></pre>
+<pre><code>##         date year month day fatalities
+## 1 1992-01-01 1992     1   1        144
+## 2 1992-01-02 1992     1   2        111
+## 3 1992-01-07 1992     1   7         85
+## 4 1992-01-12 1992     1  12        127
+## 5 1992-01-03 1992     1   3        182
+## 6 1992-01-17 1992     1  17        130</code></pre>
+<p>Now that I’ve broken out the date into it’s components, I want to see
+if fatalities correlate</p>
+</div>
+</div>
 
 
 
