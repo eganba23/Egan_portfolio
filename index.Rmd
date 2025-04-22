@@ -17,7 +17,7 @@ This website hosts my [portfolio](https://datascience4psych.github.io/DataScienc
 
 #### [Piece 4: Tinkering Around Tidy Tuesday](p04.html)
 
-#### [Piece 5: ~ Under Construction ~](p05.html)
+#### [Piece 5: Tinkering Around Tidy Tuesday Pt. 2](p05.html)
 
 #### [Piece 6: R Code Cheatsheet](p06.html)
 
