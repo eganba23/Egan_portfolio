@@ -240,7 +240,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Portfolio</a>
+      <a class="navbar-brand" href="index.html">Benjamin Egan's Projects</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -248,7 +248,7 @@ $(document).ready(function () {
   <a href="index.html">Home</a>
 </li>
 <li>
-  <a href="about.html">About</a>
+  <a href="about.html">About Me</a>
 </li>
 <li>
   <a href="p01.html">Piece 1</a>
@@ -335,9 +335,9 @@ in the United States? <br/></li>
 </div>
 <div
 id="correlation-between-fatal-car-crashes-and-particular-days-of-the-year"
-class="section level3">
-<h3>1. Correlation between fatal car crashes and particular days of the
-year</h3>
+class="section level2">
+<h2>1. Correlation between fatal car crashes and particular days of the
+year</h2>
 <p>To see if there is a correlation, I’ll use the daily_accidents
 dataset. My first step is to break out the date into separate day,
 month, and year variables.</p>
@@ -520,9 +520,9 @@ decline. Very cool, and why there was a negative correlation.</p>
 </div>
 <div
 id="what-are-the-most-dangerous-days-of-the-year-for-fatal-car-crashes-in-the-united-states"
-class="section level3">
-<h3>2. What are the most dangerous days of the year for fatal car
-crashes in the United States?</h3>
+class="section level2">
+<h2>2. What are the most dangerous days of the year for fatal car
+crashes in the United States?</h2>
 <pre class="r"><code>daily_accidents %&gt;%
   arrange(desc(fatalities)) %&gt;%
 head()</code></pre>
@@ -572,21 +572,297 @@ should stop driving on the 3rd of the month…</p>
 </div>
 <div
 id="is-driving-on-april-20th-more-dangerous-than-other-days-of-the-year"
-class="section level3">
-<h3>3. Is driving on April 20th more dangerous than other days of the
-year?</h3>
+class="section level2">
+<h2>3. Is driving on April 20th more dangerous than other days of the
+year?</h2>
 <p>To answer this question, I’ll use the daily_accidents_420 dataset,
 which conveniently created an indicator of 4/20.</p>
-<pre class="r"><code>#daily_accidents_420test &lt;- daily_accidents_420 %&gt;%
-  #filter(!(e420 = &quot;NA&quot;))
+<pre class="r"><code>daily_accidents_420 &lt;- daily_accidents_420 %&gt;%
+  filter(!e420 == &quot;NA&quot;)
 
 daily_accidents_420 %&gt;%
   ggplot(aes(
     x = e420,
     y = fatalities_count
   ))+
-  geom_point()</code></pre>
-<p><img src="p05_files/figure-html/420%20fatalities-1.png" width="672" /></p>
+  geom_jitter(width = .2)+
+  labs(
+    x = &quot;Is it 4/20?&quot;,
+    y = &quot;Fatal car crashes&quot;
+  )</code></pre>
+<p><img src="p05_files/figure-html/420%20fatalities-1.png" width="672" />
+Based on the simple visual, it looks like there are actually less fatal
+car crashes on 4/20. To confirm this, I’m going to run an t-test to see
+if the groups are different.</p>
+<pre class="r"><code>t.test(fatalities_count ~ e420, data = daily_accidents_420)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  fatalities_count by e420
+## t = 29.369, df = 24.632, p-value &lt; 2.2e-16
+## alternative hypothesis: true difference in means between group FALSE and group TRUE is not equal to 0
+## 95 percent confidence interval:
+##  83.98584 96.66370
+## sample estimates:
+## mean in group FALSE  mean in group TRUE 
+##            144.9248             54.6000</code></pre>
+<p>The p value is extremely significant, indicating that driving on 420
+causes less fatal car crashes.</p>
+</div>
+<div
+id="how-about-other-holidays-such-as-christmas-new-years-eve-or-4th-of-july"
+class="section level2">
+<h2>4. How about other holidays, such as Christmas, New years Eve, or
+4th of July?</h2>
+<p>I’ll start with Christmas, 12/25. I now need to create a Christmas
+Y/N variable.</p>
+<div id="christmas" class="section level3">
+<h3>Christmas</h3>
+<pre class="r"><code>Christmas &lt;- daily_accidents %&gt;%
+  mutate(Christmas = if_else(
+    day == 25 &amp; month == 12, &quot;Christmas&quot;, &quot;Not Christmas&quot;
+  ))
+
+Christmas %&gt;%
+  ggplot(aes(
+    x = Christmas,
+    y = fatalities
+  ))+
+  geom_jitter(width = .2)+
+  labs(
+    x = &quot;Is it Christmas?&quot;,
+    y = &quot;Fatal car crashes&quot;
+  )</code></pre>
+<p><img src="p05_files/figure-html/christmas%20fatalities-1.png" width="672" /></p>
+<p>Ok so here it’s less clear if there is a difference of fatalities for
+Christmas. As before, I’ll do a t-test to confirm this.</p>
+<pre class="r"><code>t.test(fatalities ~ Christmas, data = Christmas)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  fatalities by Christmas
+## t = -6.8592, df = 24.25, p-value = 4.058e-07
+## alternative hypothesis: true difference in means between group Christmas and group Not Christmas is not equal to 0
+## 95 percent confidence interval:
+##  -43.24549 -23.24854
+## sample estimates:
+##     mean in group Christmas mean in group Not Christmas 
+##                     111.920                     145.167</code></pre>
+<p>As before, the p value is very significant, indicating there are less
+car crash fatalities on Christmas.</p>
+</div>
+<div id="new-years" class="section level3">
+<h3>New Years</h3>
+<p>I’m now going to do this by creating a function. I tried using the
+first chunk of code, and the second chunk I got from chat GPT.</p>
+<pre class="r"><code>day_oty &lt;- function(name, specific_month, specific_day) {
+name &lt;- daily_accidents %&gt;%
+  mutate(name = if_else(
+    day == specific_day &amp; month == specific_month, &quot;Yes&quot;, &quot;No&quot;
+  ))
+}</code></pre>
+<pre class="r"><code>day_oty &lt;- function(name, specific_month, specific_day) {
+  daily_accidents %&gt;%
+    mutate({{name}} := if_else(
+        day == specific_day &amp; month == specific_month, &quot;Yes&quot;, &quot;No&quot;
+      ))
+}</code></pre>
+<p>Great. Now we can see if there is a difference.</p>
+<pre class="r"><code>NYE &lt;- day_oty(NYE, 12, 31)
+
+NYE %&gt;%
+  ggplot(aes(
+    x = NYE,
+    y = fatalities
+  ))+
+  geom_jitter(width = .2)+
+  labs(
+    x = &quot;Is it New years eve?&quot;,
+    y = &quot;Fatal car crashes&quot;
+  )</code></pre>
+<p><img src="p05_files/figure-html/new%20years%20fatalities-1.png" width="672" /></p>
+<pre class="r"><code>t.test(fatalities ~ NYE, data = NYE)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  fatalities by NYE
+## t = 1.2682, df = 24.219, p-value = 0.2168
+## alternative hypothesis: true difference in means between group No and group Yes is not equal to 0
+## 95 percent confidence interval:
+##  -4.119777 17.267764
+## sample estimates:
+##  mean in group No mean in group Yes 
+##           145.094           138.520</code></pre>
+<p>For new years eve, there actually isn’t a difference, indicating that
+New Years Eve might be the same as any normal day.</p>
+</div>
+<div id="th-of-july" class="section level3">
+<h3>4th of July</h3>
+<pre class="r"><code>july4 &lt;- day_oty(july4, 7, 4)
+
+july4 %&gt;%
+  ggplot(aes(
+    x = july4,
+    y = fatalities
+  ))+
+  geom_jitter(width = .2)+
+  labs(
+    x = &quot;Is it July 4th?&quot;,
+    y = &quot;Fatal car crashes&quot;
+  )</code></pre>
+<p><img src="p05_files/figure-html/4th%20of%20july%20fatalities-1.png" width="672" /></p>
+<pre class="r"><code>t.test(fatalities ~ july4, data = july4)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  fatalities by july4
+## t = -6.3811, df = 24.249, p-value = 1.282e-06
+## alternative hypothesis: true difference in means between group No and group Yes is not equal to 0
+## 95 percent confidence interval:
+##  -41.03296 -20.98483
+## sample estimates:
+##  mean in group No mean in group Yes 
+##          144.9911          176.0000</code></pre>
+<p>We have a winner! It looks like there are actually more fatalities on
+July 4th than normal (p &lt;.001). Maybe stick to fireworks in the
+backyard.</p>
+</div>
+</div>
+<div id="bonus---so-what-about-holidays-that-vary-like-thanksgiving"
+class="section level2">
+<h2>Bonus - So what about holidays that vary, like Thanksgiving?</h2>
+<p>As I was trying to fit the function, chatGPT said I could fit the
+function to dynamic holidays like thanksgiving. Thanksgiving falls on
+the 4th thursday of every november. This means that november will be the
+same, but the day will change every year.</p>
+<pre class="r"><code>daily_accidents &lt;- daily_accidents %&gt;%
+    mutate(date = make_date(year, month, day))
+
+check_thanksgiving &lt;- function(df) {
+  
+  thanksgiving_flags &lt;- df %&gt;%
+    filter(month(date) == 11) %&gt;%
+    arrange(date) %&gt;%
+    group_by(year(date)) %&gt;%
+    mutate(
+      weekday = wday(date, label = TRUE),
+      thursday_count = cumsum(weekday == &quot;Thu&quot;),
+      is_thanksgiving = if_else(weekday == &quot;Thu&quot; &amp; thursday_count == 4, &quot;Yes&quot;, &quot;No&quot;)
+    ) %&gt;%
+    ungroup() %&gt;%
+    select(date, is_thanksgiving)
+
+  # Merge flags back into the main data
+  df %&gt;%
+    left_join(thanksgiving_flags, by = &quot;date&quot;) %&gt;%
+    mutate(is_thanksgiving = replace_na(is_thanksgiving, &quot;No&quot;))
+  
+}
+
+
+thanksgiving_accidents &lt;- check_thanksgiving(daily_accidents)
+
+head(thanksgiving_accidents)</code></pre>
+<pre><code>##         date year month day fatalities is_thanksgiving
+## 1 1992-01-01 1992     1   1        144              No
+## 2 1992-01-02 1992     1   2        111              No
+## 3 1992-01-07 1992     1   7         85              No
+## 4 1992-01-12 1992     1  12        127              No
+## 5 1992-01-03 1992     1   3        182              No
+## 6 1992-01-17 1992     1  17        130              No</code></pre>
+<p>What this has done is that it filtered the data to just be November
+months and days, and arranged based on the year. From there, it created
+a weekday variable and a variable that counted the number of Thursdays
+in the month. It then created a final “is thanksgiving” variable that
+was based on it being the 4th Thursday. It took this variable and merged
+it with the original daily_accidents dataset.</p>
+<pre class="r"><code>thanksgiving_accidents %&gt;%
+  ggplot(aes(
+    x = is_thanksgiving,
+    y = fatalities
+  ))+
+  geom_jitter(width = .2)+
+  labs(
+    x = &quot;Is it Thanksgiving?&quot;,
+    y = &quot;Fatal car crashes&quot;
+  )</code></pre>
+<p><img src="p05_files/figure-html/thanksgiving%20difference-1.png" width="672" /></p>
+<pre class="r"><code>t.test(fatalities ~ is_thanksgiving, data = thanksgiving_accidents)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  fatalities by is_thanksgiving
+## t = 0.94434, df = 24.223, p-value = 0.3543
+## alternative hypothesis: true difference in means between group No and group Yes is not equal to 0
+## 95 percent confidence interval:
+##  -5.743886 15.442430
+## sample estimates:
+##  mean in group No mean in group Yes 
+##          145.0893          140.2400</code></pre>
+<p>Like NYE, there actually isn’t a difference, indicating that
+Thanksgiving might be the same as any normal day.</p>
+<div id="other-days" class="section level4">
+<h4>Other days</h4>
+<p>This could theoretically be done with any changing date based on the
+calendar. I can change it to be black Friday, which is the 4th Friday of
+every November</p>
+<pre class="r"><code>check_black_friday &lt;- function(df) {
+  
+  black_friday &lt;- df %&gt;%
+    filter(month(date) == 11) %&gt;%
+    arrange(date) %&gt;%
+    group_by(year(date)) %&gt;%
+    mutate(
+      weekday = wday(date, label = TRUE),
+      friday_count = cumsum(weekday == &quot;Fri&quot;),
+      is_black_friday = if_else(weekday == &quot;Fri&quot; &amp; friday_count == 4, &quot;Yes&quot;, &quot;No&quot;)
+    ) %&gt;%
+    ungroup() %&gt;%
+    select(date, is_black_friday)
+
+  df %&gt;%
+    left_join(black_friday, by = &quot;date&quot;) %&gt;%
+    mutate(is_black_friday = replace_na(is_black_friday, &quot;No&quot;))
+  
+}
+
+
+black_friday_accidents &lt;- check_black_friday(daily_accidents)
+
+head(black_friday_accidents)</code></pre>
+<pre><code>##         date year month day fatalities is_black_friday
+## 1 1992-01-01 1992     1   1        144              No
+## 2 1992-01-02 1992     1   2        111              No
+## 3 1992-01-07 1992     1   7         85              No
+## 4 1992-01-12 1992     1  12        127              No
+## 5 1992-01-03 1992     1   3        182              No
+## 6 1992-01-17 1992     1  17        130              No</code></pre>
+<pre class="r"><code>black_friday_accidents %&gt;%
+  ggplot(aes(
+    x = is_black_friday,
+    y = fatalities
+  ))+
+  geom_jitter(width = .2)+
+  labs(
+    x = &quot;Is it black friday?&quot;,
+    y = &quot;Fatal car crashes&quot;
+  )</code></pre>
+<p><img src="p05_files/figure-html/black%20friday%20difference-1.png" width="672" /></p>
+<pre class="r"><code>t.test(fatalities ~ is_black_friday, data = black_friday_accidents)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  fatalities by is_black_friday
+## t = -1.2, df = 24.203, p-value = 0.2418
+## alternative hypothesis: true difference in means between group No and group Yes is not equal to 0
+## 95 percent confidence interval:
+##  -17.570310   4.646924
+## sample estimates:
+##  mean in group No mean in group Yes 
+##          145.0583          151.5200</code></pre>
+<p>Cool. This is pretty similar to Thanksgiving, where there is no
+difference.</p>
+</div>
 </div>
 </div>
 

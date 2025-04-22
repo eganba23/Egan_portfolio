@@ -1,11 +1,11 @@
 name: "Benjamin Egan's Portfolio"
 output_dir: docs
 navbar:
-  title: "Portfolio"
+  title: "Benjamin Egan's Projects"
   left:
     - text: "Home"
       href: index.html
-    - text: "About"
+    - text: "About Me"
       href: about.html
     - text: "Piece 1"
       href: p01.html
