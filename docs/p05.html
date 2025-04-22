@@ -321,15 +321,16 @@ lab.</p>
 daily_accidents_420 &lt;- tuesdata$daily_accidents_420
 
 view(daily_accidents_420)</code></pre>
-<div id="their-questions" class="section level3">
-<h3>Their Questions</h3>
+<div id="the-questions" class="section level3">
+<h3>The Questions</h3>
 <ol style="list-style-type: decimal">
 <li>Can you detect any correlations between fatal car crashes and
 particular days of the year? <br/></li>
 <li>What are the most dangerous days of the year for fatal car crashes
 in the United States? <br/></li>
-<li>What other factors might help analyze the data in more detail? You
-can use the cleaning script to download the full dataset.</li>
+<li>Is driving on April 20th more dangerous than other days of the year?
+<br/></li>
+<li>How about other holidays, such as Christmas or the 4th of July?</li>
 </ol>
 </div>
 <div
@@ -357,7 +358,235 @@ head(daily_accidents)</code></pre>
 ## 5 1992-01-03 1992     1   3        182
 ## 6 1992-01-17 1992     1  17        130</code></pre>
 <p>Now that I’ve broken out the date into it’s components, I want to see
-if fatalities correlate</p>
+if fatalities correlate to either the day , the month, year, or specific
+day.</p>
+<pre class="r"><code>day_corr &lt;- cor(daily_accidents$day, daily_accidents$fatalities)
+
+month_corr &lt;- cor(daily_accidents$month, daily_accidents$fatalities)
+
+year_corr &lt;- cor(daily_accidents$year, daily_accidents$fatalities)
+
+dates_corr &lt;- tibble(day_corr, month_corr, year_corr)
+
+dates_corr</code></pre>
+<pre><code>## # A tibble: 1 × 3
+##   day_corr month_corr year_corr
+##      &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;
+## 1  -0.0388      0.260    -0.273</code></pre>
+<p>After doing some basic correlations, it looks like month and year
+have decent correlations around .25, but day has almost no correlation.
+But what does this mean? I’m going to visualize the distribution to see
+if we can see a trend.</p>
+<div id="months" class="section level4">
+<h4>Months</h4>
+<p>I’ll start by examining months.</p>
+<pre class="r"><code>daily_accidents_visual &lt;- daily_accidents %&gt;%
+  mutate(month_cat = case_when(
+    month == 1 ~ &quot;January&quot;,
+    month == 2 ~ &quot;February&quot;,
+    month == 3 ~ &quot;March&quot;,
+    month == 4 ~ &quot;April&quot;,
+    month == 5 ~ &quot;May&quot;,
+    month == 6 ~ &quot;June&quot;,
+    month == 7 ~ &quot;July&quot;,
+    month == 8 ~ &quot;August&quot;,
+    month == 9 ~ &quot;September&quot;,
+    month == 10 ~ &quot;October&quot;,
+    month == 11 ~ &quot;November&quot;,
+    month == 12 ~ &quot;December&quot;
+  ))
+
+month_regression &lt;- lm(fatalities ~ month, data = daily_accidents_visual)
+
+
+month_r_values &lt;- tibble(
+  month = 1:12,
+  month_cat = factor(month.name, levels = month.name),
+  pred = predict(month_regression, newdata = tibble(month = 1:12))
+)
+
+daily_accidents_visual %&gt;%
+  ggplot(aes(
+    x = fct(month_cat),
+    y = fatalities
+  ))+
+  geom_jitter(alpha = .4, width = .25)+
+  geom_line(data = month_r_values, 
+            aes(x = month_cat, y = pred, group = 1), 
+            color = &quot;blue&quot;, 
+            size = 1) +
+  theme_bw()+
+  labs(
+    x = &quot;Month&quot;,
+    y = &quot;Number of Fatalities in the month&quot;
+  )</code></pre>
+<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<p><img src="p05_files/figure-html/month%20corr%20visual-1.png" width="672" /></p>
+<p>So based on my knowledge of correlation, the .2 means that there is a
+slight increase in fatalities as we get into the calendar year. It looks
+more sinusoidal, so I’ll let the line follow a more natural curve.</p>
+<pre class="r"><code>monthly_means &lt;- daily_accidents_visual %&gt;%
+  group_by(month_cat) %&gt;%
+  summarise(mean_fatalities = mean(fatalities, na.rm = TRUE)) %&gt;%
+  mutate(month_cat = factor(month_cat, levels = month.name))
+
+daily_accidents_visual %&gt;%
+  ggplot(aes(
+    x = fct(month_cat),
+    y = fatalities
+  ))+
+  geom_jitter(alpha = .4, width = .25, color = &quot;gray&quot;)+
+  geom_smooth(aes(x = month), 
+              method = &quot;loess&quot;, 
+              se = FALSE, 
+              color = &quot;blue&quot;, 
+              size = 1, 
+              data = daily_accidents_visual) +
+  geom_point(data = monthly_means, 
+             aes(x = month_cat, y = mean_fatalities), 
+             color = &quot;tomato1&quot;, 
+             size = 2) +
+  theme_bw()+
+  labs(
+    x = &quot;Month&quot;,
+    y = &quot;Number of Fatalities in the month&quot;,
+    title = &quot;Month with non-linear line&quot;
+  )</code></pre>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="p05_files/figure-html/month%20corr%20visual%202-1.png" width="672" /></p>
+<p>As you can see, there is actually more of a sinusoidal curve to the
+data, as the peak months are late summer/early fall.</p>
+</div>
+<div id="days" class="section level4">
+<h4>Days</h4>
+<p>Even though days had an almost zero correaltion, I’m still interested
+in seeing how they turn out.</p>
+<pre class="r"><code>daily_means &lt;- daily_accidents_visual %&gt;%
+  group_by(day) %&gt;%
+  summarise(mean_fatalities = mean(fatalities, na.rm = TRUE))
+
+daily_accidents_visual %&gt;%
+  ggplot(aes(
+    x = day,
+    y = fatalities
+  ))+
+  geom_jitter(alpha = .4, width = .25, color = &quot;gray&quot;)+
+  geom_point(data = daily_means, aes(x = day, y = mean_fatalities), color = &quot;blue&quot;, size = 2) +
+  geom_smooth(color = &quot;black&quot;, alpha = .6)+
+  theme_bw()+
+  labs(
+    x = &quot;Days&quot;,
+    y = &quot;Number of Fatalities&quot;
+  )</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</code></pre>
+<p><img src="p05_files/figure-html/day%20corr%20visual-1.png" width="672" /></p>
+<p>There doesn’t appear to be any variation at all in the days, which is
+why the correlation is so low. What is interesting is that there is
+again a kind of wave pattern that appears roughly every 5-7 days. I
+would say this corresponded to days of the week, but it would be
+different for every month and every year.</p>
+</div>
+<div id="years" class="section level4">
+<h4>Years</h4>
+<pre class="r"><code>daily_accidents_visual %&gt;%
+  ggplot(aes(
+    x = year,
+    y = fatalities
+  ))+
+  geom_jitter(alpha = .4, width = .25, color = &quot;gray&quot;)+
+  geom_smooth(color = &quot;black&quot;, alpha = .6)+
+  theme_bw()+
+  labs(
+    x = &quot;Year&quot;,
+    y = &quot;Number of Fatalities&quot;
+  )</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</code></pre>
+<p><img src="p05_files/figure-html/corr%20year-1.png" width="672" /></p>
+<pre class="r"><code>min(daily_accidents_visual$year)</code></pre>
+<pre><code>## [1] 1992</code></pre>
+<pre class="r"><code>max(daily_accidents_visual$year)</code></pre>
+<pre><code>## [1] 2016</code></pre>
+<p>Now this provides a much more interesting look into car fatalities.
+We have data from 1992 to 2016. There was a massive dip in fatalities
+around 2005, but an increase around 2013/2014. After some quick
+googling, it looks like there were behavioral and vehicle safety
+programs created and implemented around this time that led to the
+decline. Very cool, and why there was a negative correlation.</p>
+</div>
+</div>
+<div
+id="what-are-the-most-dangerous-days-of-the-year-for-fatal-car-crashes-in-the-united-states"
+class="section level3">
+<h3>2. What are the most dangerous days of the year for fatal car
+crashes in the United States?</h3>
+<pre class="r"><code>daily_accidents %&gt;%
+  arrange(desc(fatalities)) %&gt;%
+head()</code></pre>
+<pre><code>##         date year month day fatalities
+## 1 2007-11-03 2007    11   3        299
+## 2 2001-02-22 2001     2  22        285
+## 3 1998-09-04 1998     9   4        273
+## 4 1996-08-24 1996     8  24        270
+## 5 1993-06-19 1993     6  19        266
+## 6 2000-09-30 2000     9  30        258</code></pre>
+<p>The most fatal day for car crashes was November 3rd, 2007. There were
+299 fatal car crashes.</p>
+<pre class="r"><code>daily_accidents %&gt;%
+  distinct(day, fatalities) %&gt;%
+    group_by(day) %&gt;%
+  summarize(total_fatal = sum(fatalities)) %&gt;%
+    arrange(desc(total_fatal)) %&gt;%
+head()</code></pre>
+<pre><code>## # A tibble: 6 × 2
+##     day total_fatal
+##   &lt;dbl&gt;       &lt;dbl&gt;
+## 1     3       19244
+## 2    16       18691
+## 3    24       18461
+## 4    11       18375
+## 5    10       18296
+## 6    22       18288</code></pre>
+<pre class="r"><code>daily_accidents %&gt;%
+  distinct(day, fatalities) %&gt;%
+    group_by(day) %&gt;%
+  summarize(avg_fatal = mean(fatalities)) %&gt;%
+    arrange(desc(avg_fatal)) %&gt;%
+head()</code></pre>
+<pre><code>## # A tibble: 6 × 2
+##     day avg_fatal
+##   &lt;dbl&gt;     &lt;dbl&gt;
+## 1     3      155.
+## 2     1      154.
+## 3     4      153.
+## 4    13      153.
+## 5    30      153.
+## 6    20      153.</code></pre>
+<p>The day with the most fatalities is the 3rd of the month, with 19,244
+fatal car crashes. The third also hold the highest average amount of
+fatalities, with around 155 fatalities every 3rd of the month. Maybe we
+should stop driving on the 3rd of the month…</p>
+</div>
+<div
+id="is-driving-on-april-20th-more-dangerous-than-other-days-of-the-year"
+class="section level3">
+<h3>3. Is driving on April 20th more dangerous than other days of the
+year?</h3>
+<p>To answer this question, I’ll use the daily_accidents_420 dataset,
+which conveniently created an indicator of 4/20.</p>
+<pre class="r"><code>#daily_accidents_420test &lt;- daily_accidents_420 %&gt;%
+  #filter(!(e420 = &quot;NA&quot;))
+
+daily_accidents_420 %&gt;%
+  ggplot(aes(
+    x = e420,
+    y = fatalities_count
+  ))+
+  geom_point()</code></pre>
+<p><img src="p05_files/figure-html/420%20fatalities-1.png" width="672" /></p>
 </div>
 </div>
 
