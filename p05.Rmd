@@ -27,7 +27,7 @@ tuesdata <- tidytuesdayR::tt_load(2025, week = 16)
 daily_accidents <- tuesdata$daily_accidents
 daily_accidents_420 <- tuesdata$daily_accidents_420
 
-view(daily_accidents_420)
+
 
 ```
 
@@ -117,12 +117,13 @@ daily_accidents_visual %>%
   theme_bw()+
   labs(
     x = "Month",
-    y = "Number of Fatalities in the month"
+    y = "Number of Fatal car crashes",
+    title = "Fatal car crashes by month"
   )
 
 ```
 
-So based on my knowledge of correlation, the .2 means that there is a slight increase in fatalities as we get into the calendar year. It looks more sinusoidal, so I'll let the line follow a more natural curve.
+Based on my knowledge of correlation, a correlation of .26 means that there is a slight increase in fatalities as we progress in the calendar year. This graph looks more sinusoidal, so I'll change the blue line to allow for curvature.
 
 ```{r month corr visual 2}
 
@@ -152,7 +153,7 @@ daily_accidents_visual %>%
   labs(
     x = "Month",
     y = "Number of Fatalities in the month",
-    title = "Month with non-linear line"
+    title = "Fatal car crashes by month with a non-linear line"
   )
 
 ```
@@ -161,7 +162,7 @@ As you can see, there is actually more of a sinusoidal curve to the data, as the
 
 #### Days
 
-Even though days had an almost zero correaltion, I'm still interested in seeing how they turn out.
+Even though days have an almost zero correlation, I'm still interested in seeing how the data look.
 
 ```{r day corr visual}
 
@@ -180,7 +181,8 @@ daily_accidents_visual %>%
   theme_bw()+
   labs(
     x = "Days",
-    y = "Number of Fatalities"
+    y = "Number of Fatalities",
+    title = "Fatal car crashes by day"
   )
 
 ```
@@ -192,17 +194,35 @@ There doesn't appear to be any variation at all in the days, which is why the co
 
 ```{r corr year}
 
+year_means <- daily_accidents_visual %>%
+  group_by(year) %>%
+  summarise(mean_fatalities = mean(fatalities, na.rm = TRUE))
+
+
+
 daily_accidents_visual %>%
   ggplot(aes(
     x = year,
     y = fatalities
   ))+
   geom_jitter(alpha = .4, width = .25, color = "gray")+
-  geom_smooth(color = "black", alpha = .6)+
+  geom_smooth(color = "blue", alpha = .6)+
+  geom_point(data = year_means, aes(x = year, y = mean_fatalities), color = "coral3", size = 2) +
   theme_bw()+
+  annotate("text", 
+           x = 1992, y = 60, 
+           label = "1992", 
+           vjust = 2, 
+           color = "black")+
+   annotate("text", 
+           x = 2016, y = 60, 
+           label = "2016", 
+           vjust = 2, 
+           color = "black")+
   labs(
     x = "Year",
-    y = "Number of Fatalities"
+    y = "Number of Fatalities",
+    title = "Fatal car crashes by year"
   )
 
 min(daily_accidents_visual$year)
@@ -222,7 +242,7 @@ head()
 
 ```
 
-The most fatal day for car crashes was November 3rd, 2007. There were 299 fatal car crashes.
+The worst  day for car crashes was November 3rd, 2007. There were 299 fatal car crashes.
 
 ```{r fatal days}
 
@@ -242,6 +262,7 @@ daily_accidents %>%
 head()
 
 ```
+
 The day with the most fatalities is the 3rd of the month, with 19,244 fatal car crashes. The third also hold the highest average amount of fatalities, with around 155 fatalities every 3rd of the month. Maybe we should stop driving on the 3rd of the month...
 
 ## 3. Is driving on April 20th more dangerous than other days of the year?
@@ -266,6 +287,7 @@ daily_accidents_420 %>%
   
 
 ```
+
 Based on the simple visual, it looks like there are actually less fatal car crashes on 4/20. To confirm this, I'm going to run an t-test to see if the groups are different.
 
 ```{r 4/20 t test}
@@ -274,11 +296,11 @@ t.test(fatalities_count ~ e420, data = daily_accidents_420)
 
 ```
 
-The p value is extremely significant, indicating that driving on 420 causes less fatal car crashes.
+The p value is extremely significant, indicating that driving on 420 causes less fatal car crashes. <br/> <br/>
 
 ## 4. How about other holidays, such as Christmas, New years Eve, or 4th of July?
 
-I'll start with Christmas, 12/25. I now need to create a Christmas Y/N variable. 
+I'll start with Christmas, 12/25. Unlike 4/20, I don't already have a variable that identifies the specific dates. I now need to create a Christmas Y/N variable. I could use filter(), but I would have to combine 
 
 ### Christmas
 
