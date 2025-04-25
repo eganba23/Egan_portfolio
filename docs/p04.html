@@ -240,7 +240,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Portfolio</a>
+      <a class="navbar-brand" href="index.html">Benjamin Egan's Projects</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -248,7 +248,7 @@ $(document).ready(function () {
   <a href="index.html">Home</a>
 </li>
 <li>
-  <a href="about.html">About</a>
+  <a href="about.html">About Me</a>
 </li>
 <li>
   <a href="p01.html">Piece 1</a>
@@ -306,11 +306,12 @@ $(document).ready(function () {
 <p>The Tidy Tuesday for the week explored movies with “summer” in their
 title. They scraped the data from IMDB’s website.</p>
 <pre class="r"><code>tuesdata &lt;- tidytuesdayR::tt_load(&#39;2024-07-30&#39;)</code></pre>
-<pre><code>## ---- Compiling #TidyTuesday Information for 2024-07-30 ----
+<pre><code>## ---- Compiling #TidyTuesday Information for 2024-07-30
+## ----
 ## --- There are 2 files available ---
 ## 
 ## 
-## ── Downloading files ────────────────────────────────────────────────
+## ── Downloading files ──────────────────────────────────────
 ## 
 ##   1 of 2: &quot;summer_movie_genres.csv&quot;
 ##   2 of 2: &quot;summer_movies.csv&quot;</code></pre>
@@ -625,9 +626,10 @@ show trends and visualizations in the data.</p>
     y = &quot;Average Rating out of 10&quot;,
     title = &quot;Average movie rating by year&quot;
   )</code></pre>
-<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
-<pre><code>## Warning: Removed 1 row containing non-finite outside the scale range
-## (`stat_smooth()`).</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~
+## x&#39;</code></pre>
+<pre><code>## Warning: Removed 1 row containing non-finite outside the scale
+## range (`stat_smooth()`).</code></pre>
 <p><img src="p04_files/figure-html/visualization%201-1.png" width="672" /></p>
 <p>The first graph I made shows the trend of movie ratings over time.
 Since there were few observations before 1950, the trend is not

@@ -309,18 +309,17 @@ there is actually no link between crashes and inhibition due to
 marijuana. This should be similar to lab 7’s visualization of bad data
 lab.</p>
 <pre class="r"><code>tuesdata &lt;- tidytuesdayR::tt_load(2025, week = 16)</code></pre>
-<pre><code>## ---- Compiling #TidyTuesday Information for 2025-04-22 ----
+<pre><code>## ---- Compiling #TidyTuesday Information for 2025-04-22
+## ----
 ## --- There are 2 files available ---
 ## 
 ## 
-## ── Downloading files ───────────────────────────────────────────────────────────
+## ── Downloading files ──────────────────────────────────────
 ## 
 ##   1 of 2: &quot;daily_accidents.csv&quot;
 ##   2 of 2: &quot;daily_accidents_420.csv&quot;</code></pre>
 <pre class="r"><code>daily_accidents &lt;- tuesdata$daily_accidents
-daily_accidents_420 &lt;- tuesdata$daily_accidents_420
-
-view(daily_accidents_420)</code></pre>
+daily_accidents_420 &lt;- tuesdata$daily_accidents_420</code></pre>
 <div id="the-questions" class="section level3">
 <h3>The Questions</h3>
 <ol style="list-style-type: decimal">
@@ -418,17 +417,14 @@ daily_accidents_visual %&gt;%
   theme_bw()+
   labs(
     x = &quot;Month&quot;,
-    y = &quot;Number of Fatalities in the month&quot;
+    y = &quot;Number of Fatal car crashes&quot;,
+    title = &quot;Fatal car crashes by month&quot;
   )</code></pre>
-<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-## ℹ Please use `linewidth` instead.
-## This warning is displayed once every 8 hours.
-## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-## generated.</code></pre>
 <p><img src="p05_files/figure-html/month%20corr%20visual-1.png" width="672" /></p>
-<p>So based on my knowledge of correlation, the .2 means that there is a
-slight increase in fatalities as we get into the calendar year. It looks
-more sinusoidal, so I’ll let the line follow a more natural curve.</p>
+<p>Based on my knowledge of correlation, a correlation of .26 means that
+there is a slight increase in fatalities as we progress in the calendar
+year. This graph looks more sinusoidal, so I’ll change the blue line to
+allow for curvature.</p>
 <pre class="r"><code>monthly_means &lt;- daily_accidents_visual %&gt;%
   group_by(month_cat) %&gt;%
   summarise(mean_fatalities = mean(fatalities, na.rm = TRUE)) %&gt;%
@@ -454,7 +450,7 @@ daily_accidents_visual %&gt;%
   labs(
     x = &quot;Month&quot;,
     y = &quot;Number of Fatalities in the month&quot;,
-    title = &quot;Month with non-linear line&quot;
+    title = &quot;Fatal car crashes by month with a non-linear line&quot;
   )</code></pre>
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="p05_files/figure-html/month%20corr%20visual%202-1.png" width="672" /></p>
@@ -463,8 +459,8 @@ data, as the peak months are late summer/early fall.</p>
 </div>
 <div id="days" class="section level4">
 <h4>Days</h4>
-<p>Even though days had an almost zero correaltion, I’m still interested
-in seeing how they turn out.</p>
+<p>Even though days have an almost zero correlation, I’m still
+interested in seeing how the data look.</p>
 <pre class="r"><code>daily_means &lt;- daily_accidents_visual %&gt;%
   group_by(day) %&gt;%
   summarise(mean_fatalities = mean(fatalities, na.rm = TRUE))
@@ -480,9 +476,11 @@ daily_accidents_visual %&gt;%
   theme_bw()+
   labs(
     x = &quot;Days&quot;,
-    y = &quot;Number of Fatalities&quot;
+    y = &quot;Number of Fatalities&quot;,
+    title = &quot;Fatal car crashes by day&quot;
   )</code></pre>
-<pre><code>## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~
+## s(x, bs = &quot;cs&quot;)&#39;</code></pre>
 <p><img src="p05_files/figure-html/day%20corr%20visual-1.png" width="672" /></p>
 <p>There doesn’t appear to be any variation at all in the days, which is
 why the correlation is so low. What is interesting is that there is
@@ -492,19 +490,38 @@ different for every month and every year.</p>
 </div>
 <div id="years" class="section level4">
 <h4>Years</h4>
-<pre class="r"><code>daily_accidents_visual %&gt;%
+<pre class="r"><code>year_means &lt;- daily_accidents_visual %&gt;%
+  group_by(year) %&gt;%
+  summarise(mean_fatalities = mean(fatalities, na.rm = TRUE))
+
+
+
+daily_accidents_visual %&gt;%
   ggplot(aes(
     x = year,
     y = fatalities
   ))+
   geom_jitter(alpha = .4, width = .25, color = &quot;gray&quot;)+
-  geom_smooth(color = &quot;black&quot;, alpha = .6)+
+  geom_smooth(color = &quot;blue&quot;, alpha = .6)+
+  geom_point(data = year_means, aes(x = year, y = mean_fatalities), color = &quot;coral3&quot;, size = 2) +
   theme_bw()+
+  annotate(&quot;text&quot;, 
+           x = 1992, y = 60, 
+           label = &quot;1992&quot;, 
+           vjust = 2, 
+           color = &quot;black&quot;)+
+   annotate(&quot;text&quot;, 
+           x = 2016, y = 60, 
+           label = &quot;2016&quot;, 
+           vjust = 2, 
+           color = &quot;black&quot;)+
   labs(
     x = &quot;Year&quot;,
-    y = &quot;Number of Fatalities&quot;
+    y = &quot;Number of Fatalities&quot;,
+    title = &quot;Fatal car crashes by year&quot;
   )</code></pre>
-<pre><code>## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~
+## s(x, bs = &quot;cs&quot;)&#39;</code></pre>
 <p><img src="p05_files/figure-html/corr%20year-1.png" width="672" /></p>
 <pre class="r"><code>min(daily_accidents_visual$year)</code></pre>
 <pre><code>## [1] 1992</code></pre>
@@ -533,8 +550,8 @@ head()</code></pre>
 ## 4 1996-08-24 1996     8  24        270
 ## 5 1993-06-19 1993     6  19        266
 ## 6 2000-09-30 2000     9  30        258</code></pre>
-<p>The most fatal day for car crashes was November 3rd, 2007. There were
-299 fatal car crashes.</p>
+<p>The worst day for car crashes was November 3rd, 2007. There were 299
+fatal car crashes.</p>
 <pre class="r"><code>daily_accidents %&gt;%
   distinct(day, fatalities) %&gt;%
     group_by(day) %&gt;%
@@ -590,10 +607,10 @@ daily_accidents_420 %&gt;%
     x = &quot;Is it 4/20?&quot;,
     y = &quot;Fatal car crashes&quot;
   )</code></pre>
-<p><img src="p05_files/figure-html/420%20fatalities-1.png" width="672" />
-Based on the simple visual, it looks like there are actually less fatal
-car crashes on 4/20. To confirm this, I’m going to run an t-test to see
-if the groups are different.</p>
+<p><img src="p05_files/figure-html/420%20fatalities-1.png" width="672" /></p>
+<p>Based on the simple visual, it looks like there are actually less
+fatal car crashes on 4/20. To confirm this, I’m going to run an t-test
+to see if the groups are different.</p>
 <pre class="r"><code>t.test(fatalities_count ~ e420, data = daily_accidents_420)</code></pre>
 <pre><code>## 
 ##  Welch Two Sample t-test
@@ -607,15 +624,17 @@ if the groups are different.</p>
 ## mean in group FALSE  mean in group TRUE 
 ##            144.9248             54.6000</code></pre>
 <p>The p value is extremely significant, indicating that driving on 420
-causes less fatal car crashes.</p>
+causes less fatal car crashes. <br/> <br/></p>
 </div>
 <div
 id="how-about-other-holidays-such-as-christmas-new-years-eve-or-4th-of-july"
 class="section level2">
 <h2>4. How about other holidays, such as Christmas, New years Eve, or
 4th of July?</h2>
-<p>I’ll start with Christmas, 12/25. I now need to create a Christmas
-Y/N variable.</p>
+<p>I’ll start with Christmas, 12/25. Unlike 4/20, I don’t already have a
+variable that identifies the specific dates. I now need to create a
+Christmas Y/N variable. I could use filter(), but I would have to
+combine</p>
 <div id="christmas" class="section level3">
 <h3>Christmas</h3>
 <pre class="r"><code>Christmas &lt;- daily_accidents %&gt;%

@@ -240,7 +240,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Portfolio</a>
+      <a class="navbar-brand" href="index.html">Benjamin Egan's Projects</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -248,7 +248,7 @@ $(document).ready(function () {
   <a href="index.html">Home</a>
 </li>
 <li>
-  <a href="about.html">About</a>
+  <a href="about.html">About Me</a>
 </li>
 <li>
   <a href="p01.html">Piece 1</a>
@@ -404,14 +404,14 @@ group4 &lt;- data.frame(id = 91:120, Gender, round(Age,0), Sugar = 0, Caffeine =
 datasets at once, so I decided to join the all/none together. I also
 renamed the distance and age variables, and saved the dataset.</p>
 <pre class="r"><code>group1and2 &lt;- group1 %&gt;% full_join(group2)</code></pre>
-<pre><code>## Joining with `by = join_by(id, Gender, round.Age..0., Sugar,
-## Caffeine, round.Distance..0.)`</code></pre>
+<pre><code>## Joining with `by = join_by(id, Gender, round.Age..0.,
+## Sugar, Caffeine, round.Distance..0.)`</code></pre>
 <pre class="r"><code>group3and4 &lt;- group3 %&gt;% full_join(group4)</code></pre>
-<pre><code>## Joining with `by = join_by(id, Gender, round.Age..0., Sugar,
-## Caffeine, round.Distance..0.)`</code></pre>
+<pre><code>## Joining with `by = join_by(id, Gender, round.Age..0.,
+## Sugar, Caffeine, round.Distance..0.)`</code></pre>
 <pre class="r"><code>lab_12_data &lt;- group1and2 %&gt;% full_join(group3and4)</code></pre>
-<pre><code>## Joining with `by = join_by(id, Gender, round.Age..0., Sugar,
-## Caffeine, round.Distance..0.)`</code></pre>
+<pre><code>## Joining with `by = join_by(id, Gender, round.Age..0.,
+## Sugar, Caffeine, round.Distance..0.)`</code></pre>
 <pre class="r"><code>lab_12_data &lt;- lab_12_data %&gt;% 
   rename(Distance = round.Distance..0.)
 

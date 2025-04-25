@@ -240,7 +240,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Portfolio</a>
+      <a class="navbar-brand" href="index.html">Benjamin Egan's Projects</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -248,7 +248,7 @@ $(document).ready(function () {
   <a href="index.html">Home</a>
 </li>
 <li>
-  <a href="about.html">About</a>
+  <a href="about.html">About Me</a>
 </li>
 <li>
   <a href="p01.html">Piece 1</a>
@@ -325,15 +325,16 @@ reader, can quickly search to get my commentary.</p>
 <pre><code>## New names:
 ## Rows: 7214 Columns: 53
 ## ── Column specification
-## ───────────────────────────────────────────── Delimiter: &quot;,&quot; chr
-## (19): name, first, last, sex, age_cat, race, c_case_number,
-## c_charge_de... dbl (19): id, age, juv_fel_count, decile_score...12,
-## juv_misd_count, juv_ot... lgl (1): violent_recid dttm (2):
-## c_jail_in, c_jail_out date (12): compas_screening_date, dob,
+## ─────────────────────────────────── Delimiter: &quot;,&quot; chr
+## (19): name, first, last, sex, age_cat, race,
+## c_case_number, c_charge_de... dbl (19): id, age,
+## juv_fel_count, decile_score...12, juv_misd_count,
+## juv_ot... lgl (1): violent_recid dttm (2): c_jail_in,
+## c_jail_out date (12): compas_screening_date, dob,
 ## c_offense_date, c_arrest_date, r_offe...
-## ℹ Use `spec()` to retrieve the full column specification for this
-## data. ℹ Specify the column types or set `show_col_types = FALSE` to
-## quiet this message.
+## ℹ Use `spec()` to retrieve the full column specification
+## for this data. ℹ Specify the column types or set
+## `show_col_types = FALSE` to quiet this message.
 ## • `decile_score` -&gt; `decile_score...12`
 ## • `priors_count` -&gt; `priors_count...15`
 ## • `decile_score` -&gt; `decile_score...40`
@@ -635,7 +636,8 @@ risk scores actually correspond to higher rates of recidivism?</h4>
     y = &quot;COMPAS risk score&quot;,
     title = &quot;The relationship between risk scores and actual recidivism&quot;
   )</code></pre>
-<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with
+## `binwidth`.</code></pre>
 <p><img src="p07_files/figure-html/risk%20score%20to%20recidivism%20visual-1.png" width="672" /></p>
 <pre class="r"><code>compas %&gt;%
   ggplot(aes(
@@ -683,7 +685,8 @@ them with the geom_smooth() and say “this might not be accurate”</p>
     y = NULL,
     title = &quot;The relationship between risk scores and actual recidivism&quot;
   )</code></pre>
-<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with
+## `binwidth`.</code></pre>
 <p><img src="p07_files/figure-html/alt%20plot-1.png" width="672" /></p>
 <p>This plot is more showing the breakdown of COMPAS scores based on
 recidivism.</p>
@@ -1028,8 +1031,8 @@ convictions differently for different racial groups?</h4>
   geom_smooth()+
   geom_jitter(width = .1, alpha = .6)+
   theme_bw()</code></pre>
-<pre><code>## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs =
-## &quot;cs&quot;)&#39;</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~
+## s(x, bs = &quot;cs&quot;)&#39;</code></pre>
 <pre><code>## Warning: Failed to fit group 2.
 ## Caused by error in `smooth.construct.cr.smooth.spec()`:
 ## ! x has insufficient unique values to support 10 knots: reduce k.</code></pre>
@@ -1055,8 +1058,8 @@ American individuals and put them side by side.</p>
     y = &quot;Number of prior offenses&quot;,
     title = &quot;Race discrepancies for the number of convictions&quot;
   )</code></pre>
-<pre><code>## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs =
-## &quot;cs&quot;)&#39;</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~
+## s(x, bs = &quot;cs&quot;)&#39;</code></pre>
 <p><img src="p07_files/figure-html/other%20prior%20and%20risk%20score%20visual-1.png" width="672" /></p>
 <p>12A. Here you can tell there are way less white defendants higher up
 on risk scale, and that African Americans have more prior convictions.
@@ -1158,8 +1161,8 @@ convictions.</p>
     y = &quot;Number of prior offenses&quot;,
     title = &quot;Race discrepancies for the number of convictions&quot;
   )</code></pre>
-<pre><code>## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs =
-## &quot;cs&quot;)&#39;</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~
+## s(x, bs = &quot;cs&quot;)&#39;</code></pre>
 <p><img src="p07_files/figure-html/stretch%20other%20prior%20and%20risk%20score%20visual-1.png" width="672" /></p>
 <p>As I explained above, the distribution for black defendants is more
 evenly spaced out compared to white defendants, which is more skewed
