@@ -56,7 +56,7 @@ head(daily_accidents)
 
 ```
 
-Now that I've broken out the date into it's components, I want to see if fatalities correlate to either the day , the month, year, or specific day.
+Now that I've broken out the date into it's components, I want to see if fatalities correlate to either the day, the month, year, or specific day.
 
 ```{r correlation dates to fatalities}
 
@@ -242,7 +242,7 @@ head()
 
 ```
 
-The worst  day for car crashes was November 3rd, 2007. There were 299 fatal car crashes.
+The worst day for car crashes was November 3rd, 2007. There were 299 fatal car crashes.
 
 ```{r fatal days}
 
@@ -355,7 +355,6 @@ day_oty <- function(name, specific_month, specific_day) {
         day == specific_day & month == specific_month, "Yes", "No"
       ))
 }
-
 
 ```
 

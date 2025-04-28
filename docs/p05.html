@@ -309,12 +309,11 @@ there is actually no link between crashes and inhibition due to
 marijuana. This should be similar to lab 7’s visualization of bad data
 lab.</p>
 <pre class="r"><code>tuesdata &lt;- tidytuesdayR::tt_load(2025, week = 16)</code></pre>
-<pre><code>## ---- Compiling #TidyTuesday Information for 2025-04-22
-## ----
+<pre><code>## ---- Compiling #TidyTuesday Information for 2025-04-22 ----
 ## --- There are 2 files available ---
 ## 
 ## 
-## ── Downloading files ──────────────────────────────────────
+## ── Downloading files ───────────────────────────────────────────────────────────
 ## 
 ##   1 of 2: &quot;daily_accidents.csv&quot;
 ##   2 of 2: &quot;daily_accidents_420.csv&quot;</code></pre>
@@ -357,7 +356,7 @@ head(daily_accidents)</code></pre>
 ## 5 1992-01-03 1992     1   3        182
 ## 6 1992-01-17 1992     1  17        130</code></pre>
 <p>Now that I’ve broken out the date into it’s components, I want to see
-if fatalities correlate to either the day , the month, year, or specific
+if fatalities correlate to either the day, the month, year, or specific
 day.</p>
 <pre class="r"><code>day_corr &lt;- cor(daily_accidents$day, daily_accidents$fatalities)
 
@@ -420,6 +419,11 @@ daily_accidents_visual %&gt;%
     y = &quot;Number of Fatal car crashes&quot;,
     title = &quot;Fatal car crashes by month&quot;
   )</code></pre>
+<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
 <p><img src="p05_files/figure-html/month%20corr%20visual-1.png" width="672" /></p>
 <p>Based on my knowledge of correlation, a correlation of .26 means that
 there is a slight increase in fatalities as we progress in the calendar
@@ -479,8 +483,7 @@ daily_accidents_visual %&gt;%
     y = &quot;Number of Fatalities&quot;,
     title = &quot;Fatal car crashes by day&quot;
   )</code></pre>
-<pre><code>## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~
-## s(x, bs = &quot;cs&quot;)&#39;</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</code></pre>
 <p><img src="p05_files/figure-html/day%20corr%20visual-1.png" width="672" /></p>
 <p>There doesn’t appear to be any variation at all in the days, which is
 why the correlation is so low. What is interesting is that there is
@@ -520,8 +523,7 @@ daily_accidents_visual %&gt;%
     y = &quot;Number of Fatalities&quot;,
     title = &quot;Fatal car crashes by year&quot;
   )</code></pre>
-<pre><code>## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~
-## s(x, bs = &quot;cs&quot;)&#39;</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;gam&#39; and formula = &#39;y ~ s(x, bs = &quot;cs&quot;)&#39;</code></pre>
 <p><img src="p05_files/figure-html/corr%20year-1.png" width="672" /></p>
 <pre class="r"><code>min(daily_accidents_visual$year)</code></pre>
 <pre><code>## [1] 1992</code></pre>
