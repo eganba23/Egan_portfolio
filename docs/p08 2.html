@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Benjamin Egan" />
+
+
+<title>Simulating Data using rnorm()</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="Aesthetics.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Benjamin Egan's Projects</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About Me</a>
+</li>
+<li>
+  <a href="p01.html">Piece 1</a>
+</li>
+<li>
+  <a href="p02.html">Piece 2</a>
+</li>
+<li>
+  <a href="p03.html">Piece 3</a>
+</li>
+<li>
+  <a href="p04.html">Piece 4</a>
+</li>
+<li>
+  <a href="p05.html">Piece 5</a>
+</li>
+<li>
+  <a href="p06.html">Piece 6</a>
+</li>
+<li>
+  <a href="p07.html">Piece 7</a>
+</li>
+<li>
+  <a href="p08.html">Piece 8</a>
+</li>
+<li>
+  <a href="p09.html">Piece 9</a>
+</li>
+<li>
+  <a href="p10.html">Piece 10</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Simulating Data using rnorm()</h1>
+<h4 class="author">Benjamin Egan</h4>
+
+</div>
+
+
+<div id="created-4325" class="section level4">
+<h4>Created 4/3/25</h4>
+</div>
+<div id="objective" class="section level2">
+<h2>Objective</h2>
+<p>As I mentioned in piece 3, I serve as a teaching assistant for the
+undergraduate Research Methods in psychology course at Wake Forest
+University. They are required to write a final paper, for which they
+need to write up and analyze a 2x2 experiment. As a TA, I have to create
+the data for the experiment. Since it’s a 2x2 between subjects with at
+least 100 participants, this would be incredibly difficult. Luckily I
+walked through module 13 on simulating data, and should be able to
+create the data.</p>
+<p>The basic function I’ll need to use is rnorm(). This will let me
+randomly generate a sample of a normal distribution. I’m starting and
+making sure I can actually generate the data.</p>
+<pre class="r"><code>set.seed(123)
+
+base_rnorm &lt;- rnorm(100, mean = 50, sd = 5)
+
+first_attempt &lt;- data.frame(id = 1:100, base_rnorm)
+
+                                      
+data.frame(first_attempt) %&gt;%
+ggplot(
+ aes(x=base_rnorm)
+)+
+  theme_bw()+
+  geom_histogram(binwidth=2,color=&quot;black&quot;, fill=&quot;blue&quot;) +
+  labs(
+    title = &quot;Look, I can create data!&quot;,
+    x = NULL, 
+    y = NULL
+    )</code></pre>
+<p><img src="p08_files/figure-html/base%20rnorm-1.png" width="672" /></p>
+<p>My plan is to create four different samples, one for each group. I
+then will join them to create a large dataset. This way I can control
+the main effects and interactions.</p>
+<p>The experiment calls for two variables, Sugar (sugar/no sugar) and
+Caffeine (caffeine/no caffeine), and the DV is reported distance to an
+object.</p>
+<p>I also included gender and age for students to be able to use in
+their participants sections.</p>
+</div>
+<div id="creating-the-groups" class="section level2">
+<h2>Creating the groups</h2>
+<div id="sugar-and-caffeine" class="section level3">
+<h3>Sugar and caffeine</h3>
+<pre class="r"><code>set.seed(101)
+
+Distance &lt;- rnorm(30, mean = 235, sd = 23.03)
+
+Gender &lt;- c(&quot;Male&quot;,&quot;Female&quot;)
+Gender &lt;- sample(Gender, 30, replace=TRUE, prob=c(0.5, 0.5))
+
+Age &lt;- rnorm(30, mean = 19, sd = .5)
+
+group1 &lt;- data.frame(id = 1:30, Gender, round(Age,0), Sugar = 1, Caffeine = 1, round(Distance,0))</code></pre>
+<p>Using round() allowed me to make distance a whole number</p>
+</div>
+<div id="no-sugar-and-no-caffeine" class="section level3">
+<h3>No Sugar and no caffeine</h3>
+<pre class="r"><code>set.seed(102)
+
+Distance &lt;- rnorm(30, mean = 275, sd = 20.1)
+
+Gender &lt;- c(&quot;Male&quot;,&quot;Female&quot;)
+Gender &lt;- sample(Gender, 30, replace=TRUE, prob=c(0.5, 0.5))
+
+Age &lt;- rnorm(30, mean = 19, sd = .5)
+
+group2 &lt;- data.frame(id = 31:60, Gender, round(Age,0), Sugar = 0, Caffeine = 0, round(Distance,0))</code></pre>
+</div>
+<div id="sugar-and-no-caffeine" class="section level3">
+<h3>Sugar and no caffeine</h3>
+<pre class="r"><code>set.seed(103)
+
+Distance &lt;- rnorm(30, mean = 282, sd = 21.3)
+
+Gender &lt;- c(&quot;Male&quot;,&quot;Female&quot;)
+Gender &lt;- sample(Gender, 30, replace=TRUE, prob=c(0.5, 0.5))
+
+Age &lt;- rnorm(30, mean = 19, sd = .5)
+
+group3 &lt;- data.frame(id = 61:90, Gender, round(Age,0), Sugar = 1, Caffeine = 0, round(Distance,0))</code></pre>
+</div>
+<div id="no-sugar-and-caffeine" class="section level3">
+<h3>No sugar and caffeine</h3>
+<pre class="r"><code>set.seed(104)
+
+Distance &lt;- rnorm(30, mean = 250, sd = 23.05)
+
+Gender &lt;- c(&quot;Male&quot;,&quot;Female&quot;)
+Gender &lt;- sample(Gender, 30, replace=TRUE, prob=c(0.5, 0.5))
+
+Age &lt;- rnorm(30, mean = 19, sd = .5)
+
+group4 &lt;- data.frame(id = 91:120, Gender, round(Age,0), Sugar = 0, Caffeine = 1, round(Distance,0))</code></pre>
+</div>
+</div>
+<div id="joining-the-groups" class="section level2">
+<h2>Joining the groups</h2>
+<p>Here I join the datasets together. I only know how to join two
+datasets at once, so I decided to join the all/none together. I also
+renamed the distance and age variables, and saved the dataset.</p>
+<pre class="r"><code>group1and2 &lt;- group1 %&gt;% full_join(group2)</code></pre>
+<pre><code>## Joining with `by = join_by(id, Gender, round.Age..0.,
+## Sugar, Caffeine, round.Distance..0.)`</code></pre>
+<pre class="r"><code>group3and4 &lt;- group3 %&gt;% full_join(group4)</code></pre>
+<pre><code>## Joining with `by = join_by(id, Gender, round.Age..0.,
+## Sugar, Caffeine, round.Distance..0.)`</code></pre>
+<pre class="r"><code>lab_12_data &lt;- group1and2 %&gt;% full_join(group3and4)</code></pre>
+<pre><code>## Joining with `by = join_by(id, Gender, round.Age..0.,
+## Sugar, Caffeine, round.Distance..0.)`</code></pre>
+<pre class="r"><code>lab_12_data &lt;- lab_12_data %&gt;% 
+  rename(Distance = round.Distance..0.)
+
+lab_12_data &lt;- lab_12_data %&gt;% 
+  rename(Age = round.Age..0.)
+
+write_sav(lab_12_data, &quot;class_data_official.sav&quot;)
+
+Test_data &lt;- read_sav(&quot;class_data_official.sav&quot;)</code></pre>
+<p>lab_12_data is a data frame that includes an ID number, if they had
+sugar or caffeine, and a distance score.</p>
+</div>
+<div id="testing-my-dataset" class="section level2">
+<h2>Testing my dataset</h2>
+<p>I want to make sure there is a main effect of caffeine, no main
+effect of sugar, and an interaction that suggests the influence of both
+caffeine and sugar highly reduces perceived distance. Here, I ran a
+factorial ANOVA on the data and plotted the means</p>
+<pre class="r"><code>Visual &lt;- Test_data %&gt;%
+  mutate(Sugar = case_when(
+    Sugar == 0 ~ &quot;No Sugar&quot;,
+    Sugar == 1 ~ &quot;Sugar&quot;
+  ))
+
+Visual &lt;- Visual %&gt;%
+  mutate(Caffeine = case_when(
+    Caffeine == 0 ~ &quot;No Caffeine&quot;,
+    Caffeine == 1 ~ &quot;Caffeine&quot;
+  ))
+
+
+aov(Distance ~ Sugar * Caffeine, Visual) %&gt;%
+summary()</code></pre>
+<pre><code>##                 Df Sum Sq Mean Sq F value Pr(&gt;F)    
+## Sugar            1   1274    1274   3.148 0.0786 .  
+## Caffeine         1  47960   47960 118.514 &lt;2e-16 ***
+## Sugar:Caffeine   1   2075    2075   5.128 0.0254 *  
+## Residuals      116  46943     405                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>Visual %&gt;%
+  ggplot(aes(
+    x = Sugar,
+    y = Distance,
+    group = Caffeine,
+    color = Caffeine
+  ))+
+  geom_line()+
+  theme_bw()+
+  labs(
+    x = &quot;Sugar?&quot;,
+    y = &quot;Perceived Distance&quot;,
+    color = &quot;Caffeine?&quot;,
+    title = &quot;Visual for Caffeine x Sugar data&quot;
+  )</code></pre>
+<p><img src="p08_files/figure-html/anova%20to%20test-1.png" width="672" /></p>
+<p>Based on the ANOVA and the graph, it looks like I accomplished my
+goal.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
