@@ -37,7 +37,7 @@ In this piece, I will demonstrate my graphing abilities.
 
 ### What is Family Decision Making
 
-Adolescents were presented with a variety o topics that families with adolescents often have to make decisions about, and chose the answer that best reflected who made most of the decisions on each topic. The scale ranged from 1 (My parents decide this without discussing it with me) to 5 (I decide this without discussing it with my parents), with 3 representing a joint decision (My parents and I make the decision together). Adolescents were asked these questions at three timepoints, two years and three years after the initial observation.
+Adolescents were presented with a variety of topics that families with adolescents often have to make decisions about, and chose the answer that best reflected who made most of the decisions on each topic. The scale ranged from 1 (My parents decide this without discussing it with me) to 5 (I decide this without discussing it with my parents), with 3 representing a joint decision (My parents and I make the decision together). Adolescents were asked these questions at three timepoints, two years and three years after the initial observation.
 
 
 ```{r seting up FDM, echo = FALSE}
